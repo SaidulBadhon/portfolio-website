@@ -19,31 +19,13 @@ export default function About() {
     >
       <SectionHeading>About me</SectionHeading>
       <p className="mb-3">
-        After graduating with a degree in{" "}
-        <span className="font-medium">Accounting</span>, I decided to pursue my
-        passion for programming. I enrolled in a coding bootcamp and learned{" "}
-        <span className="font-medium">full-stack web development</span>.{" "}
-        <span className="italic">My favorite part of programming</span> is the
-        problem-solving aspect. I <span className="underline">love</span> the
-        feeling of finally figuring out a solution to a problem. My core stack
-        is{" "}
-        <span className="font-medium">
-          React, Next.js, Node.js, and MongoDB
-        </span>
-        . I am also familiar with TypeScript and Prisma. I am always looking to
-        learn new technologies. I am currently looking for a{" "}
-        <span className="font-medium">full-time position</span> as a software
-        developer.
-      </p>
+      Armed with a degree in Computer Science and Engineering, I embarked on a self-directed journey into full-stack web development. Over the course of nine years, my expertise has grown to encompass a diverse range of technologies, including PHP, Python, Java, and C#. Specializing in React JS, React Native, and Node JS, I have honed my skills as a MERN stack engineer.
+     My passion for both Web3 and Web2 technologies is evident in my self-guided exploration and mastery of blockchain integration into my core stack. Through relentless self-learning, I have cultivated the ability to seamlessly blend traditional and decentralized approaches, resulting in the creation of robust, user-centric web solutions.
+  </p>   <p className="mb-3">
+Staying at the forefront of industry trends, my commitment to innovation remains unwavering. My journey, marked by self-driven learning and hands-on experience, underscores my dedication to delivering cutting-edge solutions that meet the evolving demands of the ever-changing landscape of web development.
+</p>
 
-      <p>
-        <span className="italic">When I'm not coding</span>, I enjoy playing
-        video games, watching movies, and playing with my dog. I also enjoy{" "}
-        <span className="font-medium">learning new things</span>. I am currently
-        learning about{" "}
-        <span className="font-medium">history and philosophy</span>. I'm also
-        learning how to play the guitar.
-      </p>
+  
     </motion.section>
   );
 }
