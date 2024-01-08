@@ -93,15 +93,12 @@ export const skillsData = [
   "Next.js",
   "Node.js",
   "Git",
-  "Tailwind",
-  "Prisma",
   "MongoDB",
-  "Redux",
-  "GraphQL",
-  "Apollo",
   "Express",
   "PostgreSQL",
   "Python",
-  "Django",
-  "Framer Motion",
+  "Web3",
+  "Blockchain",
+
+
 ] as const;
