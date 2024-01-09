@@ -32,7 +32,7 @@ export const links = [
     hash: "#contact",
   },
 ] as const;
-
+// React, Next.js, JavaScript, Tailwind, Prisma and MongoDB
 export const experiencesData = [
   {
     title: "Graduated bootcamp",
@@ -51,12 +51,12 @@ export const experiencesData = [
     date: "2019 - 2021",
   },
   {
-    title: "Full-Stack Developer",
-    location: "Houston, TX",
+    title: "Full-Stack Software Engineer",
+    location: "Concord, CF",
     description:
-      "I'm now a full-stack developer working as a freelancer. My stack includes React, Next.js, TypeScript, Tailwind, Prisma and MongoDB. I'm open to full-time opportunities.",
+      "I'm now a working as a full-stack software engineer in Jutsu.ai. My stack includes Web2, Web3, Blockchain, AI and ML. I'm open to full-time opportunities.",
     icon: React.createElement(FaReact),
-    date: "2021 - present",
+    date: "2023 - present",
   },
 ] as const;
 
