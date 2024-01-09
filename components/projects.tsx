@@ -14,7 +14,7 @@ export default function Projects() {
       <SectionHeading>My projects</SectionHeading>
       <div>
         {projectsData.map((project, index) => (
-            <Project {...project} />
+          <Project key={index} {...project} />
         ))}
       </div>
     </section>
