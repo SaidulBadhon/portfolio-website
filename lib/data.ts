@@ -62,6 +62,7 @@ export const experiencesData = [
 
 export const projectsData = [
   {
+    slug: "project-1",
     title: "CorpComment",
     description:
       "I worked as a full-stack developer on this startup project for 2 years. Users can give public feedback to companies.",
@@ -69,6 +70,7 @@ export const projectsData = [
     imageUrl: corpcommentImg,
   },
   {
+    slug: "project-2",
     title: "rmtDev",
     description:
       "Job board for remote developer jobs. I was the front-end developer. It has features like filtering, sorting and pagination.",
@@ -76,6 +78,7 @@ export const projectsData = [
     imageUrl: rmtdevImg,
   },
   {
+    slug: "project-3",
     title: "Word Analytics",
     description:
       "A public web app for quick analytics on text. It shows word count, character count and social media post limits.",
