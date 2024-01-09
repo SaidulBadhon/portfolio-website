@@ -5,6 +5,8 @@ import { LuGraduationCap } from "react-icons/lu";
 import corpcommentImg from "@/public/corpcomment.png";
 import rmtdevImg from "@/public/rmtdev.png";
 import wordanalyticsImg from "@/public/wordanalytics.png";
+import jutsuWebImg from "@/public/jutsu-web.png";
+import jutsuEditorImg from "@/public/jutsu-editor.png";
 
 export const links = [
   {
@@ -61,6 +63,22 @@ export const experiencesData = [
 ] as const;
 
 export const projectsData = [
+  {
+    slug: "jutsu-ai",
+    title: "Jutsu.ai",
+    description:
+      "I'm now a working as a full-stack software engineer in Jutsu.ai. My stack includes Web2, Web3, Blockchain, AI and ML. I'm open to full-time opportunities",
+    tags: ["Next JS", "Near VM", "Blockchain", "Web3"],
+    imageUrl: jutsuWebImg,
+  },
+  {
+    slug: "jutsu-ai",
+    title: "Jutsu IDE",
+    description:
+      "I'm now a working as a full-stack software engineer in Jutsu.ai. My stack includes Web2, Web3, Blockchain, AI and ML. I'm open to full-time opportunities",
+    tags: ["CodeMirror", "Near Protocol", "Blockchain", "Web3"],
+    imageUrl: jutsuEditorImg,
+  },
   {
     slug: "project-1",
     title: "CorpComment",
