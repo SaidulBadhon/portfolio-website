@@ -5,6 +5,8 @@ import { LuGraduationCap } from "react-icons/lu";
 import corpcommentImg from "@/public/corpcomment.png";
 import rmtdevImg from "@/public/rmtdev.png";
 import wordanalyticsImg from "@/public/wordanalytics.png";
+import jutsuWebImg from "@/public/jutsu-web.png";
+import jutsuEditorImg from "@/public/jutsu-editor.png";
 
 export const links = [
   {
@@ -32,7 +34,7 @@ export const links = [
     hash: "#contact",
   },
 ] as const;
-
+// React, Next.js, JavaScript, Tailwind, Prisma and MongoDB
 export const experiencesData = [
   {
     title: "Graduated bootcamp",
@@ -51,16 +53,32 @@ export const experiencesData = [
     date: "2019 - 2021",
   },
   {
-    title: "Full-Stack Developer",
-    location: "Houston, TX",
+    title: "Full-Stack Software Engineer",
+    location: "Concord, CF",
     description:
-      "I'm now a full-stack developer working as a freelancer. My stack includes React, Next.js, TypeScript, Tailwind, Prisma and MongoDB. I'm open to full-time opportunities.",
+      "I'm now a working as a full-stack software engineer in Jutsu.ai. My stack includes Web2, Web3, Blockchain, AI and ML. I'm open to full-time opportunities.",
     icon: React.createElement(FaReact),
-    date: "2021 - present",
+    date: "2023 - present",
   },
 ] as const;
 
 export const projectsData = [
+  {
+    slug: "jutsu-ai",
+    title: "Jutsu.ai",
+    description:
+      "I'm now a working as a full-stack software engineer in Jutsu.ai. My stack includes Web2, Web3, Blockchain, AI and ML. I'm open to full-time opportunities",
+    tags: ["Next JS", "Near VM", "Blockchain", "Web3"],
+    imageUrl: jutsuWebImg,
+  },
+  {
+    slug: "jutsu-ai",
+    title: "Jutsu IDE",
+    description:
+      "I'm now a working as a full-stack software engineer in Jutsu.ai. My stack includes Web2, Web3, Blockchain, AI and ML. I'm open to full-time opportunities",
+    tags: ["CodeMirror", "Near Protocol", "Blockchain", "Web3"],
+    imageUrl: jutsuEditorImg,
+  },
   {
     slug: "project-1",
     title: "CorpComment",
