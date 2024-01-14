@@ -13,3 +13,35 @@ html.dark {
 .borderBlack {
   @apply border border-black/10;
 }
+
+/* Start of Project Page */
+.profile-hero-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+  gap: 8px;
+  grid-template-areas:
+    "a b c d"
+    "e e c d"
+    "e e f f"
+    "e e f f";
+}
+.a {
+  grid-area: a;
+}
+.b {
+  grid-area: b;
+}
+.c {
+  grid-area: c;
+}
+.d {
+  grid-area: d;
+}
+.f {
+  grid-area: f;
+}
+.e {
+  grid-area: e;
+}
+/* End of Project Page */
