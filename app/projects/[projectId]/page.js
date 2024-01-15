@@ -51,91 +51,114 @@ export default function page() {
           </div>
         </div>
 
-        <div class="profile-hero-container">
-          <div class="b"></div>
-          <div class="c"></div>
-          <div class="d"></div>
-          <div class="f"></div>
-          <div class="e"></div>
-          <div class="a"></div>
-        </div>
-
-        <GlassContainer>
-          <Rating size={4} rate={3} />
-        </GlassContainer>
-
-        <GlassContainer
+        <div
+          class="profile-hero-container"
           style={{
-            display: "grid",
-            gridTemplateColumns: "60px 1fr",
-            gap: "1rem",
+            marginTop: 32,
           }}
         >
-          <motion.div
-            initial={{ opacity: 0, scale: 0, rotate: -90 }}
-            animate={{ opacity: 1, scale: 1, rotate: 0 }}
-            transition={{
-              type: "tween",
-              duration: 0.4,
+          <GlassContainer className="b">
+            <Rating size={4} rate={3} />
+          </GlassContainer>
 
-              delay: 0.1,
-            }}
-          >
-            <svg
-              className="text-yellow-300"
-              style={{
-                width: 60,
-                height: 60,
+          <GlassContainer className="c">
+            <motion.div
+              initial={{ opacity: 0, scale: 0, rotate: -90 }}
+              animate={{ opacity: 1, scale: 1, rotate: 0 }}
+              transition={{
+                type: "tween",
+                duration: 0.4,
+
+                delay: 0.1,
               }}
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="currentColor"
-              viewBox="0 0 22 20"
             >
-              <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-            </svg>
-          </motion.div>
+              <svg
+                className="text-yellow-300"
+                style={{
+                  width: 60,
+                  height: 60,
+                }}
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 22 20"
+              >
+                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+              </svg>
+            </motion.div>
+          </GlassContainer>
+          <GlassContainer className="d">
+            <motion.div
+              initial={{ opacity: 0, scale: 0, rotate: -90 }}
+              animate={{ opacity: 1, scale: 1, rotate: 0 }}
+              transition={{
+                type: "tween",
+                duration: 0.4,
 
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              gap: ".25rem",
-            }}
-          >
-            <h2 className="text-1xl" style={{ fontWeight: 600 }}>
-              Final Rating
-            </h2>
+                delay: 0.1,
+              }}
+            >
+              <svg
+                className="text-yellow-300"
+                style={{
+                  width: 60,
+                  height: 60,
+                }}
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 22 20"
+              >
+                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+              </svg>
+            </motion.div>
+          </GlassContainer>
+          <GlassContainer className="f">
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                gap: ".25rem",
+              }}
+            >
+              <h2 className="text-1xl" style={{ fontWeight: 600 }}>
+                Final Rating
+              </h2>
 
-            <Rating size={3} rate={3} />
-          </div>
-        </GlassContainer>
-
-        <p className="mt-4 text-xl">This is a page inside a project.</p>
-        <p className="mt-4 text-xl">
-          The project ID is <code className="text-red-500">{projectId}</code>.
-        </p>
-        <p className="mt-4 text-xl">
-          The page ID is <code className="text-red-500">{pageId}</code>.
-        </p>
-        <p className="mt-4 text-xl">
-          The page slug is <code className="text-red-500">{pageSlug}</code>.
-        </p>
-        <p className="mt-4 text-xl">
-          The page path is <code className="text-red-500">{pagePath}</code>.
-        </p>
-        <p className="mt-4 text-xl">
-          The page URL is <code className="text-red-500">{pageUrl}</code>.
-        </p>
+              <Rating size={3} rate={3} />
+            </div>
+          </GlassContainer>
+          <GlassContainer className="e">
+            <p className="mt-4 text-xl">This is a page inside a project.</p>
+          </GlassContainer>
+          <GlassContainer className="a">
+            <p className="mt-4 text-xl">
+              The project ID is
+              <code className="text-red-500">{projectId}</code>.
+            </p>
+            {/* <p className="mt-4 text-xl">
+              The page ID is <code className="text-red-500">{pageId}</code>.
+            </p>
+            <p className="mt-4 text-xl">
+              The page slug is <code className="text-red-500">{pageSlug}</code>.
+            </p>
+            <p className="mt-4 text-xl">
+              The page path is <code className="text-red-500">{pagePath}</code>.
+            </p>
+            <p className="mt-4 text-xl">
+              The page URL is <code className="text-red-500">{pageUrl}</code>.
+            </p> */}
+          </GlassContainer>
+        </div>
       </div>
     </main>
   );
 }
 
-const GlassContainer = ({ children, style }) => (
+const GlassContainer = ({ children, style, className }) => (
   <div
-    className="bg-gray-900 bg-opacity-10 dark:bg-white dark:bg-opacity-10"
+    className={`bg-gray-900 bg-opacity-10 dark:bg-white dark:bg-opacity-10 ${className}`}
     style={{
       backdropFilter: "blur(10px)",
       borderRadius: "1rem",
