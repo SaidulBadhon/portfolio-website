@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { BsArrowRight } from "react-icons/bs";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import Rating from "@/components/Rating";
 import { motion } from "framer-motion";
@@ -57,82 +56,9 @@ export default function page() {
             marginTop: 32,
           }}
         >
-          <GlassContainer className="b">
-            <Rating size={4} rate={3} />
-          </GlassContainer>
-
-          <GlassContainer className="c">
-            <motion.div
-              initial={{ opacity: 0, scale: 0, rotate: -90 }}
-              animate={{ opacity: 1, scale: 1, rotate: 0 }}
-              transition={{
-                type: "tween",
-                duration: 0.4,
-
-                delay: 0.1,
-              }}
-            >
-              <svg
-                className="text-yellow-300"
-                style={{
-                  width: 60,
-                  height: 60,
-                }}
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                viewBox="0 0 22 20"
-              >
-                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-              </svg>
-            </motion.div>
-          </GlassContainer>
-          <GlassContainer className="d">
-            <motion.div
-              initial={{ opacity: 0, scale: 0, rotate: -90 }}
-              animate={{ opacity: 1, scale: 1, rotate: 0 }}
-              transition={{
-                type: "tween",
-                duration: 0.4,
-
-                delay: 0.1,
-              }}
-            >
-              <svg
-                className="text-yellow-300"
-                style={{
-                  width: 60,
-                  height: 60,
-                }}
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                viewBox="0 0 22 20"
-              >
-                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-              </svg>
-            </motion.div>
-          </GlassContainer>
-          <GlassContainer className="f">
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                gap: ".25rem",
-              }}
-            >
-              <h2 className="text-1xl" style={{ fontWeight: 600 }}>
-                Final Rating
-              </h2>
-
-              <Rating size={3} rate={3} />
-            </div>
-          </GlassContainer>
-          <GlassContainer className="e">
-            <p className="mt-4 text-xl">This is a page inside a project.</p>
-          </GlassContainer>
+          {/* A */}
           <GlassContainer className="a">
+            A
             <p className="mt-4 text-xl">
               The project ID is
               <code className="text-red-500">{projectId}</code>.
@@ -149,6 +75,95 @@ export default function page() {
             <p className="mt-4 text-xl">
               The page URL is <code className="text-red-500">{pageUrl}</code>.
             </p> */}
+          </GlassContainer>
+
+          {/* B */}
+          <GlassContainer className="b">
+            B
+            <Rating size={4} rate={3} />
+          </GlassContainer>
+
+          {/* C */}
+          <GlassContainer className="c">
+            C
+            <motion.div
+              initial={{ opacity: 0, scale: 0, rotate: -90 }}
+              animate={{ opacity: 1, scale: 1, rotate: 0 }}
+              transition={{
+                type: "tween",
+                duration: 0.4,
+
+                delay: 0.1,
+              }}
+            >
+              <svg
+                className="text-yellow-300"
+                style={{
+                  width: 60,
+                  height: 60,
+                }}
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 22 20"
+              >
+                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+              </svg>
+            </motion.div>
+          </GlassContainer>
+
+          {/* D */}
+          <GlassContainer className="d">
+            D
+            <motion.div
+              initial={{ opacity: 0, scale: 0, rotate: -90 }}
+              animate={{ opacity: 1, scale: 1, rotate: 0 }}
+              transition={{
+                type: "tween",
+                duration: 0.4,
+
+                delay: 0.1,
+              }}
+            >
+              <svg
+                className="text-yellow-300"
+                style={{
+                  width: 60,
+                  height: 60,
+                }}
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 22 20"
+              >
+                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+              </svg>
+            </motion.div>
+          </GlassContainer>
+
+          {/* E */}
+          <GlassContainer className="e">
+            <p className="mt-4 text-xl">E</p>
+            <p className="mt-4 text-xl">This is a page inside a project.</p>
+          </GlassContainer>
+
+          {/* F */}
+          <GlassContainer className="f">
+            F
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                gap: ".25rem",
+              }}
+            >
+              <h2 className="text-1xl" style={{ fontWeight: 600 }}>
+                Final Rating
+              </h2>
+
+              <Rating size={3} rate={3} />
+            </div>
           </GlassContainer>
         </div>
       </div>
