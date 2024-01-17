@@ -1,9 +1,14 @@
 "use client";
 
-import React from "react";
+import React, { useRef } from "react";
+import Image from "next/image";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import Rating from "@/components/Rating";
-import { motion } from "framer-motion";
+import { MdDateRange } from "react-icons/md";
+import { TbStarsFilled } from "react-icons/tb";
+import { motion, useScroll, useTransform } from "framer-motion";
+
+import macbook_pro_cover from "/public/assets/macbook_pro_cover.png";
 
 export default function page() {
   const projectId =
@@ -14,7 +19,7 @@ export default function page() {
   const pageUrl = "http://localhost:3000/projects/123/page";
 
   const picture1 =
-    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=3570&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+    "https://ipfs.near.social/ipfs/bafkreih2dzkami7r3d3cbuvz2fu5keoxkt52didhawuy5foza3qgrpwv2m";
 
   return (
     <main className="flex flex-col items-center px-4">
@@ -57,12 +62,27 @@ export default function page() {
           }}
         >
           {/* A */}
-          <GlassContainer className="a">
-            A
+          <GlassContainer
+            className="a"
+            style={{
+              display: "flex",
+              justifyContent: "flex-start",
+              alignItems: "center",
+              gap: "1rem",
+            }}
+          >
+            <MdDateRange style={{ fontSize: 48 }} />
+
+            <div>
+              <p className="text-sm">Created on</p>
+              <p className="text-xl font-bold">2021-03-19</p>
+            </div>
+
+            {/* A
             <p className="mt-4 text-xl">
-              The project ID is
-              <code className="text-red-500">{projectId}</code>.
-            </p>
+              The project ID is */}
+            {/* <code className="text-red-500">{projectId}</code>. */}
+            {/* </p> */}
             {/* <p className="mt-4 text-xl">
               The page ID is <code className="text-red-500">{pageId}</code>.
             </p>
@@ -78,9 +98,22 @@ export default function page() {
           </GlassContainer>
 
           {/* B */}
-          <GlassContainer className="b">
-            B
-            <Rating size={4} rate={3} />
+          <GlassContainer
+            className="b"
+            style={{
+              display: "flex",
+              justifyContent: "flex-start",
+              alignItems: "center",
+              gap: "1rem",
+            }}
+          >
+            <TbStarsFilled style={{ fontSize: 48 }} />
+
+            <div>
+              <p className="text-sm pb-1">Final Rating</p>
+
+              <Rating size={3} rate={3} />
+            </div>
           </GlassContainer>
 
           {/* C */}
@@ -142,14 +175,102 @@ export default function page() {
           </GlassContainer>
 
           {/* E */}
-          <GlassContainer className="e">
-            <p className="mt-4 text-xl">E</p>
-            <p className="mt-4 text-xl">This is a page inside a project.</p>
-          </GlassContainer>
+          <motion.div
+            style={{
+              scale: 1,
+              opacity: 1,
+
+              overflow: "hidden",
+              backdropFilter: "blur(10px)",
+              borderRadius: "1rem",
+              padding: "1rem",
+
+              position: "relative",
+            }}
+            className="bg-gray-900 bg-opacity-10 dark:bg-white dark:bg-opacity-10 group e"
+          >
+            <div
+              style={{
+                // height: 45,
+
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <p
+                className="text-sm opacity-0 translate-x-0
+                transition 
+                  group-hover:opacity-[1]
+                  group-hover:translate-x-8
+"
+              >
+                Screenshots
+              </p>
+            </div>
+
+            <img
+              src={picture1}
+              alt="Project I worked on"
+              quality={95}
+              className="absolute hidden sm:block bottom-0 left-0 w-[100%] rounded-t-lg shadow-2xl
+          transition 
+          group-hover:scale-[1.2]
+          group-hover:translate-x-3
+          group-hover:translate-y-3
+          group-hover:rotate-3
+
+          group-even:group-hover:translate-x-3
+          group-even:group-hover:translate-y-3
+          group-even:group-hover:rotate-2
+
+          group-even:right-[initial] group-even:-left-40"
+            />
+          </motion.div>
 
           {/* F */}
-          <GlassContainer className="f">
-            F
+          <GlassContainer
+            className="f"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-start",
+              gap: ".25rem",
+            }}
+          >
+            <p className="text-sm">Review</p>
+
+            <div className="mt-4">
+              <div className="flex gap-4">
+                <img className="rounded-full w-14 h-14" src={picture1} />
+
+                <div className="flex flex-col justify-center items-start gap-0">
+                  <p className="text-xl font-bold">Saidul Badhon</p>
+                  <p className="text-sm">Web Developer</p>
+                </div>
+              </div>
+
+              <p
+                className="text-lg font-medium mt-4 py-3 px-6 relative"
+                style={{
+                  backdropFilter: "blur(2px)",
+                  borderRadius: ".5rem",
+                }}
+              >
+                <q className="max4Lines">
+                  I highly recommend saidulbadhon for your mobile app
+                  development project. They took my app from a messy prototype
+                  to a beautiful finished product, suitable for submission to
+                  the stores. They were extremely responsive to my requests and
+                  understood the requirements easily, the work was of extremely
+                  high quality and they were understanding when I requested
+                  revisions. They were also great at keeping me involved in the
+                  development and worked with my preferences in mind which I
+                  really appreciated. I would definitely hire again.
+                </q>
+              </p>
+            </div>
+            {/* F
             <div
               style={{
                 display: "flex",
@@ -163,7 +284,7 @@ export default function page() {
               </h2>
 
               <Rating size={3} rate={3} />
-            </div>
+            </div> */}
           </GlassContainer>
         </div>
       </div>
@@ -178,6 +299,9 @@ const GlassContainer = ({ children, style, className }) => (
       backdropFilter: "blur(10px)",
       borderRadius: "1rem",
       padding: "1rem",
+
+      height: "100%",
+
       ...style,
     }}
   >

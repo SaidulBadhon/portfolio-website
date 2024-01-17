@@ -14,6 +14,83 @@ html.dark {
   @apply border border-black/10;
 }
 
+* {
+  /* scrollbar-width: thin;
+  scrollbar-color: var(--line-color) transparent; */
+
+  box-sizing: border-box;
+}
+
+.max1Lines {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1; /* number of lines to show */
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.max2Lines {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* number of lines to show */
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.max3Lines {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* number of lines to show */
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.max4Lines {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 4; /* number of lines to show */
+  line-clamp: 4;
+  -webkit-box-orient: vertical;
+}
+
+.max5Lines {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 5; /* number of lines to show */
+  line-clamp: 5;
+  -webkit-box-orient: vertical;
+}
+
+.max6Lines {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 6; /* number of lines to show */
+  line-clamp: 6;
+  -webkit-box-orient: vertical;
+}
+
+/* Style the opening quotation mark */
+q::before {
+  content: "\201C"; /* Unicode character for left double quotation mark */
+  font-size: 1.5em; /* Adjust the font size as needed */
+  position: absolute;
+  left: 0.25em; /* Adjust the position as needed */
+}
+
+/* Style the closing quotation mark */
+/* q::after {
+  content: "\201D";
+  font-size: 1.5em;
+  position: absolute;
+  right: -0.2em;
+} */
+
 /* Start of Project Page */
 .profile-hero-container {
   display: grid;
@@ -28,7 +105,7 @@ html.dark {
 }
 .a {
   grid-area: a;
-  height: 150px;
+  height: 125px;
 }
 .b {
   grid-area: b;
