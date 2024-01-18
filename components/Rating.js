@@ -6,7 +6,7 @@ export default function Rating({
   size,
 }) {
   return (
-    <div class="flex items-center">
+    <div className="flex items-center">
       {[...Array(rate)].map((_, i) => (
         <svg
           key={i}

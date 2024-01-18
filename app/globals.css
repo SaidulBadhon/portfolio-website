@@ -84,12 +84,14 @@ q::before {
 }
 
 /* Style the closing quotation mark */
-/* q::after {
-  content: "\201D";
-  font-size: 1.5em;
-  position: absolute;
-  right: -0.2em;
-} */
+/* 
+  q::after {
+    content: "\201D";
+    font-size: 1.5em;
+    position: absolute;
+    right: -0.2em;
+  } 
+*/
 
 /* Start of Project Page */
 .profile-hero-container {
@@ -190,3 +192,20 @@ q::before {
 }
 
 /* End of Project Page */
+
+.embla {
+  overflow: hidden;
+}
+.embla__container {
+  display: flex;
+}
+.embla__slide {
+  flex: 0 0 100%;
+  min-width: 0;
+
+  aspect-ratio: 16 / 8;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

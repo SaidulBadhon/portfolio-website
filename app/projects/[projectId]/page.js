@@ -1,25 +1,96 @@
 "use client";
 
-import React, { useRef } from "react";
-import Image from "next/image";
+import React, { useEffect, useState, useCallback } from "react";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import Rating from "@/components/Rating";
+import { motion } from "framer-motion";
+import useEmblaCarousel from "embla-carousel-react";
+
 import { MdDateRange } from "react-icons/md";
 import { TbStarsFilled } from "react-icons/tb";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { FaHourglassEnd } from "react-icons/fa";
+import { IoIosArrowForward } from "react-icons/io";
 
-import macbook_pro_cover from "/public/assets/macbook_pro_cover.png";
-
+const options = {
+  loop: true,
+};
 export default function page() {
+  const [emblaRef, emblaApi] = useEmblaCarousel(options);
+  const [prevBtnDisabled, setPrevBtnDisabled] = useState(true);
+  const [nextBtnDisabled, setNextBtnDisabled] = useState(true);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [scrollSnaps, setScrollSnaps] = useState([]);
+
+  const scrollPrev = useCallback(
+    () => emblaApi && emblaApi.scrollPrev(),
+    [emblaApi]
+  );
+  const scrollNext = useCallback(
+    () => emblaApi && emblaApi.scrollNext(),
+    [emblaApi]
+  );
+  const scrollTo = useCallback(
+    (index) => emblaApi && emblaApi.scrollTo(index),
+    [emblaApi]
+  );
+
+  const onInit = useCallback((emblaApi) => {
+    setScrollSnaps(emblaApi.scrollSnapList());
+  }, []);
+
+  const onSelect = useCallback((emblaApi) => {
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+    setPrevBtnDisabled(!emblaApi.canScrollPrev());
+    setNextBtnDisabled(!emblaApi.canScrollNext());
+  }, []);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+
+    onInit(emblaApi);
+    onSelect(emblaApi);
+    emblaApi.on("reInit", onInit);
+    emblaApi.on("reInit", onSelect);
+    emblaApi.on("select", onSelect);
+  }, [emblaApi, onInit, onSelect]);
+
+  // const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
+
+  // useEffect(() => {
+  //   if (emblaApi) {
+  //     console.log(emblaApi.slideNodes()); // Access API
+  //   }
+  // }, [emblaApi]);
+
+  //
+
   const projectId =
     "Jutsu IDE - A code editor for near protocol & smart contracts on the blockchain";
-  const pageId = "456";
-  const pageSlug = "page";
-  const pagePath = "/projects/123/page";
-  const pageUrl = "http://localhost:3000/projects/123/page";
-
   const picture1 =
     "https://ipfs.near.social/ipfs/bafkreih2dzkami7r3d3cbuvz2fu5keoxkt52didhawuy5foza3qgrpwv2m";
+
+  const gallary = [
+    picture1,
+    picture1,
+    picture1,
+    picture1,
+    picture1,
+    picture1,
+    picture1,
+    picture1,
+    picture1,
+    picture1,
+    picture1,
+    picture1,
+    picture1,
+    picture1,
+    picture1,
+    picture1,
+    picture1,
+    picture1,
+    picture1,
+    picture1,
+  ];
 
   return (
     <main className="flex flex-col items-center px-4">
@@ -56,9 +127,9 @@ export default function page() {
         </div>
 
         <div
-          class="profile-hero-container"
+          className="profile-hero-container"
           style={{
-            marginTop: 32,
+            marginTop: 48,
           }}
         >
           {/* A */}
@@ -71,30 +142,50 @@ export default function page() {
               gap: "1rem",
             }}
           >
-            <MdDateRange style={{ fontSize: 48 }} />
+            {" "}
+            <motion.div
+              initial={{
+                marginTop: 3,
+                opacity: 1,
+                scale: 0.75,
+                rotate: -180,
+              }}
+              animate={{ marginTop: 3, opacity: 1, scale: 1, rotate: 0 }}
+              transition={{
+                type: "tween",
+                duration: 0.4,
 
+                delay: 0.1,
+              }}
+            >
+              <MdDateRange style={{ fontSize: 48 }} />
+            </motion.div>
             <div>
-              <p className="text-sm">Created on</p>
+              <p className="text-sm">Delivered at</p>
               <p className="text-xl font-bold">2021-03-19</p>
             </div>
-
             {/* A
-            <p className="mt-4 text-xl">
-              The project ID is */}
-            {/* <code className="text-red-500">{projectId}</code>. */}
-            {/* </p> */}
-            {/* <p className="mt-4 text-xl">
-              The page ID is <code className="text-red-500">{pageId}</code>.
-            </p>
-            <p className="mt-4 text-xl">
-              The page slug is <code className="text-red-500">{pageSlug}</code>.
-            </p>
-            <p className="mt-4 text-xl">
-              The page path is <code className="text-red-500">{pagePath}</code>.
-            </p>
-            <p className="mt-4 text-xl">
-              The page URL is <code className="text-red-500">{pageUrl}</code>.
-            </p> */}
+              <p className="mt-4 text-xl">
+                The project ID is 
+                <code className="text-red-500">{projectId}</code>. 
+              </p>
+
+              <p className="mt-4 text-xl">
+                The page ID is <code className="text-red-500">{pageId}</code>.
+              </p>
+
+              <p className="mt-4 text-xl">
+                The page slug is <code className="text-red-500">{pageSlug}</code>.
+              </p>
+
+              <p className="mt-4 text-xl">
+                The page path is <code className="text-red-500">{pagePath}</code>.
+              </p>
+
+              <p className="mt-4 text-xl">
+                The page URL is <code className="text-red-500">{pageUrl}</code>.
+              </p> 
+            */}
           </GlassContainer>
 
           {/* B */}
@@ -107,7 +198,23 @@ export default function page() {
               gap: "1rem",
             }}
           >
-            <TbStarsFilled style={{ fontSize: 48 }} />
+            <motion.div
+              initial={{
+                marginTop: 3,
+                opacity: 1,
+                scale: 0.75,
+                rotate: -180,
+              }}
+              animate={{ marginTop: 3, opacity: 1, scale: 1, rotate: 0 }}
+              transition={{
+                type: "tween",
+                duration: 0.4,
+
+                delay: 0.3,
+              }}
+            >
+              <TbStarsFilled style={{ fontSize: 48 }} />
+            </motion.div>
 
             <div>
               <p className="text-sm pb-1">Final Rating</p>
@@ -117,32 +224,82 @@ export default function page() {
           </GlassContainer>
 
           {/* C */}
-          <GlassContainer className="c">
-            C
-            <motion.div
-              initial={{ opacity: 0, scale: 0, rotate: -90 }}
-              animate={{ opacity: 1, scale: 1, rotate: 0 }}
-              transition={{
-                type: "tween",
-                duration: 0.4,
+          <GlassContainer
+            className="c"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-start",
+              alignItems: "flex-start",
+              gap: "1rem",
 
-                delay: 0.1,
-              }}
-            >
-              <svg
-                className="text-yellow-300"
-                style={{
-                  width: 60,
-                  height: 60,
+              paddingTop: "2.6rem",
+            }}
+          >
+            <div style={{ display: "flex", gap: "1rem" }}>
+              <motion.div
+                initial={{
+                  marginTop: 3,
+                  opacity: 1,
+                  scale: 0.75,
+                  rotate: -180,
                 }}
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                viewBox="0 0 22 20"
+                animate={{ marginTop: 3, opacity: 1, scale: 1, rotate: 0 }}
+                transition={{
+                  type: "tween",
+                  duration: 0.4,
+
+                  delay: 0.2,
+                }}
               >
-                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-              </svg>
-            </motion.div>
+                <FaHourglassEnd style={{ fontSize: 40 }} />
+              </motion.div>
+
+              <div>
+                <p className="text-sm">Project Duration</p>
+                <p className="text-xl font-bold">
+                  2.5{" "}
+                  <span className="font-normal" style={{ fontSize: ".75rem" }}>
+                    Months
+                  </span>
+                </p>
+              </div>
+            </div>
+
+            <p className="text-sm">
+              Lorem quis reprehenderit nisi mollit nulla. Quis duis mollit
+              pariatur eu Lorem irure. Adipisicing cillum cillum in do do
+              eiusmod velit non eu. Occaecat aliqua Lorem consequat non ipsum
+              nisi ex occaecat ut occaecat exercitation occaecat.
+            </p>
+
+            {/* 
+              C
+              <motion.div
+                initial={{ opacity: 0, scale: 0, rotate: -90 }}
+                animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                transition={{
+                  type: "tween",
+                  duration: 0.4,
+
+                  delay: 0.1,
+                }}
+              >
+                <svg
+                  className="text-yellow-300"
+                  style={{
+                    width: 60,
+                    height: 60,
+                  }}
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  viewBox="0 0 22 20"
+                >
+                  <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                </svg>
+              </motion.div>
+            */}
           </GlassContainer>
 
           {/* D */}
@@ -270,22 +427,93 @@ export default function page() {
                 </q>
               </p>
             </div>
-            {/* F
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                gap: ".25rem",
-              }}
-            >
-              <h2 className="text-1xl" style={{ fontWeight: 600 }}>
-                Final Rating
-              </h2>
-
-              <Rating size={3} rate={3} />
-            </div> */}
           </GlassContainer>
+        </div>
+
+        {/* Carousel */}
+        <div
+          className="embla bg-gray-900 bg-opacity-10 dark:bg-white dark:bg-opacity-10"
+          ref={emblaRef}
+          style={{
+            marginBlock: 48,
+            padding: "1rem",
+
+            backdropFilter: "blur(10px)",
+            borderRadius: "1rem",
+          }}
+        >
+          <div className="embla__container" style={{ gap: "1rem" }}>
+            {gallary.map((picture, i) => (
+              <div className="embla__slide">
+                <img
+                  src={picture}
+                  alt="Project I worked on"
+                  quality={95}
+                  className="w-full rounded-lg shadow-2xl"
+                  style={{
+                    borderRadius: ".5rem",
+                  }}
+                />
+              </div>
+            ))}
+          </div>
+
+          <div className="embla__buttons">
+            <button
+              style={{
+                height: "5rem",
+                width: "5rem",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+
+                backgroundColor: "red",
+              }}
+              onClick={scrollPrev}
+              disabled={prevBtnDisabled}
+            >
+              <IoIosArrowForward
+                style={{
+                  transform: "rotate(180deg)",
+                  fontSize: "2rem",
+                }}
+              />
+            </button>
+
+            <button
+              style={{
+                height: "5rem",
+                width: "5rem",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+
+                backgroundColor: "red",
+              }}
+              onClick={scrollNext}
+              disabled={nextBtnDisabled}
+            >
+              <IoIosArrowForward
+                style={{
+                  fontSize: "2rem",
+                }}
+              />
+            </button>
+          </div>
+        </div>
+
+        <div className="embla__dots">
+          {gallary.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => scrollTo(index)}
+              className={"embla__dot".concat(
+                index === selectedIndex ? " embla__dot--selected" : ""
+              )}
+            >
+              *
+            </button>
+          ))}
         </div>
       </div>
     </main>
