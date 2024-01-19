@@ -10,6 +10,7 @@ import { MdDateRange } from "react-icons/md";
 import { TbStarsFilled } from "react-icons/tb";
 import { FaHourglassEnd } from "react-icons/fa";
 import { IoIosArrowForward } from "react-icons/io";
+import { GoDotFill } from "react-icons/go";
 
 const options = {
   loop: true,
@@ -497,20 +498,33 @@ export default function ProjectPage() {
               />
             </button>
           </div>
-        </div>
 
-        <div className="embla__dots">
-          {gallary.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => scrollTo(index)}
-              className={"embla__dot".concat(
-                index === selectedIndex ? " embla__dot--selected" : ""
-              )}
-            >
-              *
-            </button>
-          ))}
+          {/* Dots */}
+          <div
+            className="embla__dots"
+            style={{
+              position: "absolute",
+              bottom: "2rem",
+              left: 0,
+              right: 0,
+              margin: "0 auto",
+
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            {gallary.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => scrollTo(index)}
+                className={"embla__dot".concat(
+                  index === selectedIndex ? " embla__dot--selected" : ""
+                )}
+              >
+                <GoDotFill />
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     </main>
