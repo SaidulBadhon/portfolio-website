@@ -521,7 +521,12 @@ export default function ProjectPage() {
                   index === selectedIndex ? " embla__dot--selected" : ""
                 )}
               >
-                <GoDotFill />
+                <GoDotFill
+                  style={{
+                    color: index === selectedIndex ? "#ffffff" : "#ffffff22",
+                    fontSize: index === selectedIndex ? "1.25rem" : "1rem",
+                  }}
+                />
               </button>
             ))}
           </div>
