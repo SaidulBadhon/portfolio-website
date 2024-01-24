@@ -14,6 +14,7 @@ export default function Project({
   description,
   tags,
   imageUrl,
+  coverArt,
 }: ProjectProps) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -52,7 +53,7 @@ export default function Project({
           </div>
 
           <Image
-            src={imageUrl}
+            src={imageUrl || coverArt}
             alt="Project I worked on"
             quality={95}
             className="absolute hidden sm:block top-8 -right-40 w-[28.25rem] rounded-t-lg shadow-2xl

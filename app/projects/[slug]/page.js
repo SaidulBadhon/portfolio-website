@@ -1,7 +1,13 @@
-import React from "react";
+import ProjectPage from "@/src/pages/project/ProjectPage";
+import { projectsData } from "@/lib/data";
 
-export default function Page() {
-  return <div>page</div>;
+export default async function Page({ params }) {
+  const { slug } = params;
+  const project = projectsData.find((project) => project.slug === slug);
+
+  console.log("project", project);
+
+  return <ProjectPage {...project} />;
 }
 
 // export const config = {

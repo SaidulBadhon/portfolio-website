@@ -4,94 +4,25 @@ import React, { useEffect, useState, useCallback } from "react";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import Rating from "@/components/Rating";
 import { motion } from "framer-motion";
-import useEmblaCarousel from "embla-carousel-react";
 
 import { MdDateRange } from "react-icons/md";
 import { TbStarsFilled } from "react-icons/tb";
 import { FaHourglassEnd } from "react-icons/fa";
-import { IoIosArrowForward } from "react-icons/io";
-import { GoDotFill } from "react-icons/go";
 
-const options = {
-  loop: true,
-};
-export default function ProjectPage() {
-  const [emblaRef, emblaApi] = useEmblaCarousel(options);
-  const [prevBtnDisabled, setPrevBtnDisabled] = useState(true);
-  const [nextBtnDisabled, setNextBtnDisabled] = useState(true);
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [scrollSnaps, setScrollSnaps] = useState([]);
+import GallerySection from "./_components/GallerySection";
 
-  const scrollPrev = useCallback(
-    () => emblaApi && emblaApi.scrollPrev(),
-    [emblaApi]
-  );
-  const scrollNext = useCallback(
-    () => emblaApi && emblaApi.scrollNext(),
-    [emblaApi]
-  );
-  const scrollTo = useCallback(
-    (index) => emblaApi && emblaApi.scrollTo(index),
-    [emblaApi]
-  );
+export default function ProjectPage(props) {
+  const {
+    title,
+    label,
 
-  const onInit = useCallback((emblaApi) => {
-    setScrollSnaps(emblaApi.scrollSnapList());
-  }, []);
+    description,
+    shortDescription,
+    tags,
 
-  const onSelect = useCallback((emblaApi) => {
-    setSelectedIndex(emblaApi.selectedScrollSnap());
-    setPrevBtnDisabled(!emblaApi.canScrollPrev());
-    setNextBtnDisabled(!emblaApi.canScrollNext());
-  }, []);
-
-  useEffect(() => {
-    if (!emblaApi) return;
-
-    onInit(emblaApi);
-    onSelect(emblaApi);
-    emblaApi.on("reInit", onInit);
-    emblaApi.on("reInit", onSelect);
-    emblaApi.on("select", onSelect);
-  }, [emblaApi, onInit, onSelect]);
-
-  // const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
-
-  // useEffect(() => {
-  //   if (emblaApi) {
-  //     console.log(emblaApi.slideNodes()); // Access API
-  //   }
-  // }, [emblaApi]);
-
-  //
-
-  const projectId =
-    "Jutsu IDE - A code editor for near protocol & smart contracts on the blockchain";
-  const picture1 =
-    "https://ipfs.near.social/ipfs/bafkreih2dzkami7r3d3cbuvz2fu5keoxkt52didhawuy5foza3qgrpwv2m";
-
-  const gallary = [
-    picture1,
-    picture1,
-    picture1,
-    picture1,
-    picture1,
-    picture1,
-    picture1,
-    picture1,
-    picture1,
-    picture1,
-    picture1,
-    picture1,
-    picture1,
-    picture1,
-    picture1,
-    picture1,
-    picture1,
-    picture1,
-    picture1,
-    picture1,
-  ];
+    coverArt,
+    gallery,
+  } = props;
 
   return (
     <main className="flex flex-col items-center px-4">
@@ -113,7 +44,7 @@ export default function ProjectPage() {
               lineHeight: 1.25,
             }}
           >
-            {projectId}
+            {label}
           </h1>
 
           <div className="flex flex-col justify-center items-end">
@@ -267,69 +198,42 @@ export default function ProjectPage() {
               </div>
             </div>
 
-            <p className="text-sm">
-              Lorem quis reprehenderit nisi mollit nulla. Quis duis mollit
-              pariatur eu Lorem irure. Adipisicing cillum cillum in do do
-              eiusmod velit non eu. Occaecat aliqua Lorem consequat non ipsum
-              nisi ex occaecat ut occaecat exercitation occaecat.
-            </p>
-
-            {/* 
-              C
-              <motion.div
-                initial={{ opacity: 0, scale: 0, rotate: -90 }}
-                animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                transition={{
-                  type: "tween",
-                  duration: 0.4,
-
-                  delay: 0.1,
-                }}
-              >
-                <svg
-                  className="text-yellow-300"
-                  style={{
-                    width: 60,
-                    height: 60,
-                  }}
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 22 20"
-                >
-                  <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                </svg>
-              </motion.div>
-            */}
+            <p className="text-sm">{shortDescription}</p>
           </GlassContainer>
 
           {/* D */}
           <GlassContainer className="d">
-            D
-            <motion.div
-              initial={{ opacity: 0, scale: 0, rotate: -90 }}
-              animate={{ opacity: 1, scale: 1, rotate: 0 }}
-              transition={{
-                type: "tween",
-                duration: 0.4,
-
-                delay: 0.1,
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-start",
+                alignItems: "flex-start",
+                flexWrap: "wrap",
+                gap: ".5rem",
               }}
             >
-              <svg
-                className="text-yellow-300"
-                style={{
-                  width: 60,
-                  height: 60,
-                }}
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                viewBox="0 0 22 20"
-              >
-                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-              </svg>
-            </motion.div>
+              {tags?.map((tag, i) => (
+                <span
+                  key={i}
+                  className="
+                    px-4 py-2 
+                    bg-opacity-10 
+                    
+                    hover:bg-opacity-30 
+                    dark:bg-opacity-10 
+                    hover:dark:bg-opacity-30 
+                  
+                    bg-gray-900 
+                  "
+                  // dark:active:bg-white
+                  style={{
+                    borderRadius: ".5rem",
+                  }}
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
           </GlassContainer>
 
           {/* E */}
@@ -349,11 +253,11 @@ export default function ProjectPage() {
           >
             <div
               style={{
-                // height: 45,
-
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
+
+                zIndex: 999,
               }}
             >
               <p
@@ -368,9 +272,12 @@ export default function ProjectPage() {
             </div>
 
             <img
-              src={picture1}
+              src={coverArt?.src}
               alt="Project I worked on"
               quality={95}
+              style={{
+                zIndex: 1,
+              }}
               className="absolute hidden sm:block bottom-0 left-0 w-[100%] rounded-t-lg shadow-2xl
           transition 
           group-hover:scale-[1.2]
@@ -399,12 +306,16 @@ export default function ProjectPage() {
             <p className="text-sm">Review</p>
 
             <div className="mt-4">
-              <div className="flex gap-4">
-                <img className="rounded-full w-14 h-14" src={picture1} />
+              <div className="flex gap-3">
+                <img
+                  className="rounded-full w-12 h-12"
+                  src={`https://source.boringavatars.com/pixel/120/${title} 
+            `}
+                />
 
                 <div className="flex flex-col justify-center items-start gap-0">
-                  <p className="text-xl font-bold">Saidul Badhon</p>
-                  <p className="text-sm">Web Developer</p>
+                  <p className="text-xl font-bold">Jon Dow</p>
+                  <p className="text-sm">Product Manager</p>
                 </div>
               </div>
 
@@ -431,106 +342,37 @@ export default function ProjectPage() {
           </GlassContainer>
         </div>
 
-        {/* Carousel */}
+        {/* Description */}
         <div
-          className="embla bg-gray-900 bg-opacity-10 dark:bg-white dark:bg-opacity-10"
-          ref={emblaRef}
+          className="bg-gray-900 bg-opacity-10 dark:bg-white dark:bg-opacity-10"
           style={{
-            marginBlock: 48,
-            padding: "1rem",
-
             backdropFilter: "blur(10px)",
             borderRadius: "1rem",
+            padding: "1rem",
+            height: "100%",
+
+            marginTop: 48,
           }}
         >
-          <div className="embla__container" style={{ gap: "1rem" }}>
-            {gallary.map((picture, i) => (
-              <div key={i} className="embla__slide">
-                <img
-                  src={picture}
-                  alt="Project I worked on"
-                  quality={95}
-                  className="w-full rounded-lg shadow-2xl"
-                  style={{
-                    borderRadius: ".5rem",
-                  }}
-                />
-              </div>
-            ))}
-          </div>
+          <h1 className="text-3xl font-bold">Description</h1>
 
           <div
-            className="embla__buttons"
             style={{
-              display: "flex",
-              justifyContent: "space-between",
-              padding: "0 2rem",
+              height: 1,
+              width: "100%",
 
-              position: "absolute",
-              top: "50%",
-              left: 0,
-              right: 0,
-              transform: "translateY(-50%)",
+              backgroundColor: "#FFFFFF11",
+
+              marginTop: 16,
+              marginBottom: 16,
             }}
-          >
-            <button
-              className="h-[5rem] w-[5rem] flex justify-center items-center rounded-full transition duration-200 ease-in-out backdrop-blur-sm bg-transparent text-white hover:bg-[#ffffff11] active:bg-[#ffffff22]"
-              onClick={scrollPrev}
-              disabled={prevBtnDisabled}
-            >
-              <IoIosArrowForward
-                style={{
-                  transform: "rotate(180deg)",
-                  fontSize: "2rem",
-                }}
-              />
-            </button>
+          />
 
-            <button
-              className="h-[5rem] w-[5rem] flex justify-center items-center rounded-full transition duration-200 ease-in-out backdrop-blur-sm bg-transparent text-white hover:bg-[#ffffff11] active:bg-[#ffffff22]"
-              onClick={scrollNext}
-              disabled={nextBtnDisabled}
-            >
-              <IoIosArrowForward
-                style={{
-                  fontSize: "2rem",
-                }}
-              />
-            </button>
-          </div>
-
-          {/* Dots */}
-          <div
-            className="embla__dots"
-            style={{
-              position: "absolute",
-              bottom: "2rem",
-              left: 0,
-              right: 0,
-              margin: "0 auto",
-
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            {gallary.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => scrollTo(index)}
-                className={"embla__dot".concat(
-                  index === selectedIndex ? " embla__dot--selected" : ""
-                )}
-              >
-                <GoDotFill
-                  style={{
-                    color: index === selectedIndex ? "#ffffff" : "#ffffff22",
-                    fontSize: index === selectedIndex ? "1.25rem" : "1rem",
-                  }}
-                />
-              </button>
-            ))}
-          </div>
+          <p>{description}</p>
         </div>
+
+        {/* Carousel */}
+        {gallery && <GallerySection gallery={gallery} />}
       </div>
     </main>
   );
