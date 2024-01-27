@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useState } from "react";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import Rating from "@/components/Rating";
 import { motion } from "framer-motion";

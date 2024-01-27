@@ -1,3 +1,5 @@
+"use client";
+
 import Markdown from "markdown-to-jsx";
 
 export default function MarkdownViewer({ className, src, pOnly }) {
@@ -316,7 +318,7 @@ export default function MarkdownViewer({ className, src, pOnly }) {
             },
       }}
     >
-      {src}
+      {src || ""}
     </Markdown>
   );
 }
