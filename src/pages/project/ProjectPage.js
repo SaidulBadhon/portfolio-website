@@ -8,8 +8,13 @@ import { motion } from "framer-motion";
 import { MdDateRange } from "react-icons/md";
 import { TbStarsFilled } from "react-icons/tb";
 import { FaHourglassEnd } from "react-icons/fa";
+import { FaPeopleGroup } from "react-icons/fa6";
+import { MdEngineering } from "react-icons/md";
 
 import GallerySection from "./_components/GallerySection";
+import ReviewsSection from "./_components/ReviewsSection";
+
+import MarkdownViewer from "../../../components/MarkdownViewer";
 
 export default function ProjectPage(props) {
   const {
@@ -22,6 +27,14 @@ export default function ProjectPage(props) {
 
     coverArt,
     gallery,
+
+    reviews,
+
+    // project
+    projectDuration,
+    projectTeam,
+    projectRole,
+    projectResponsibilities,
   } = props;
 
   return (
@@ -74,7 +87,6 @@ export default function ProjectPage(props) {
               gap: "1rem",
             }}
           >
-            {" "}
             <motion.div
               initial={{
                 marginTop: 3,
@@ -190,7 +202,7 @@ export default function ProjectPage(props) {
               <div>
                 <p className="text-sm">Project Duration</p>
                 <p className="text-xl font-bold">
-                  2.5{" "}
+                  {projectDuration}{" "}
                   <span className="font-normal" style={{ fontSize: ".75rem" }}>
                     Months
                   </span>
@@ -198,7 +210,67 @@ export default function ProjectPage(props) {
               </div>
             </div>
 
-            <p className="text-sm">{shortDescription}</p>
+            {/* projectTeam */}
+            <div style={{ display: "flex", gap: "1rem" }}>
+              <motion.div
+                initial={{
+                  marginTop: 3,
+                  opacity: 1,
+                  scale: 0.75,
+                  rotate: -180,
+                }}
+                animate={{ marginTop: 3, opacity: 1, scale: 1, rotate: 0 }}
+                transition={{
+                  type: "tween",
+                  duration: 0.4,
+
+                  delay: 0.2,
+                }}
+              >
+                <FaPeopleGroup style={{ fontSize: 40 }} />
+              </motion.div>
+
+              <div>
+                <p className="text-sm">Team</p>
+                <p className="text-xl font-bold">
+                  {projectTeam}{" "}
+                  <span className="font-normal" style={{ fontSize: ".75rem" }}>
+                    Members
+                  </span>
+                </p>
+              </div>
+            </div>
+
+            {/* projectRole */}
+            <div style={{ display: "flex", gap: "1rem" }}>
+              <motion.div
+                initial={{
+                  marginTop: 3,
+                  opacity: 1,
+                  scale: 0.75,
+                  rotate: -180,
+                }}
+                animate={{ marginTop: 3, opacity: 1, scale: 1, rotate: 0 }}
+                transition={{
+                  type: "tween",
+                  duration: 0.4,
+
+                  delay: 0.2,
+                }}
+              >
+                <MdEngineering style={{ fontSize: 40 }} />
+              </motion.div>
+
+              <div>
+                <p className="text-sm">My Role</p>
+                <p className="text-xl font-bold">{projectRole}</p>
+              </div>
+            </div>
+
+            <button className="text-sky-100 hover:text-sky-500 transition-all font-medium	">
+              See Responsibilities
+            </button>
+            {/* <p className="text-sm">{shortDescription}</p> */}
           </GlassContainer>
 
           {/* D */}
@@ -246,6 +318,7 @@ export default function ProjectPage(props) {
               backdropFilter: "blur(10px)",
               borderRadius: "1rem",
               padding: "1rem",
+              // height: "100%",
 
               position: "relative",
             }}
@@ -305,71 +378,12 @@ export default function ProjectPage(props) {
           >
             <p className="text-sm">Review</p>
 
-            <div className="mt-4">
-              <div className="flex gap-3">
-                <img
-                  className="rounded-full w-12 h-12"
-                  src={`https://source.boringavatars.com/pixel/120/${title} 
-            `}
-                />
-
-                <div className="flex flex-col justify-center items-start gap-0">
-                  <p className="text-xl font-bold">Jon Dow</p>
-                  <p className="text-sm">Product Manager</p>
-                </div>
-              </div>
-
-              <p
-                className="text-lg font-medium mt-4 py-3 px-6 relative"
-                style={{
-                  backdropFilter: "blur(2px)",
-                  borderRadius: ".5rem",
-                }}
-              >
-                <q className="max4Lines">
-                  I highly recommend saidulbadhon for your mobile app
-                  development project. They took my app from a messy prototype
-                  to a beautiful finished product, suitable for submission to
-                  the stores. They were extremely responsive to my requests and
-                  understood the requirements easily, the work was of extremely
-                  high quality and they were understanding when I requested
-                  revisions. They were also great at keeping me involved in the
-                  development and worked with my preferences in mind which I
-                  really appreciated. I would definitely hire again.
-                </q>
-              </p>
-            </div>
+            <ReviewsSection reviews={reviews} />
           </GlassContainer>
         </div>
 
         {/* Description */}
-        <div
-          className="bg-gray-900 bg-opacity-10 dark:bg-white dark:bg-opacity-10"
-          style={{
-            backdropFilter: "blur(10px)",
-            borderRadius: "1rem",
-            padding: "1rem",
-            height: "100%",
-
-            marginTop: 48,
-          }}
-        >
-          <h1 className="text-3xl font-bold">Description</h1>
-
-          <div
-            style={{
-              height: 1,
-              width: "100%",
-
-              backgroundColor: "#FFFFFF11",
-
-              marginTop: 16,
-              marginBottom: 16,
-            }}
-          />
-
-          <p>{description}</p>
-        </div>
+        <Description description={description} />
 
         {/* Carousel */}
         {gallery && <GallerySection gallery={gallery} />}
@@ -377,6 +391,58 @@ export default function ProjectPage(props) {
     </main>
   );
 }
+
+const Description = ({ description }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  return (
+    <div
+      className="bg-gray-900 bg-opacity-10 dark:bg-white dark:bg-opacity-10"
+      style={{
+        backdropFilter: "blur(10px)",
+        borderRadius: "1rem",
+        padding: "1rem",
+        height: "100%",
+
+        marginTop: 48,
+      }}
+    >
+      <h1 className="text-3xl font-bold">Description</h1>
+
+      <div
+        style={{
+          height: 1,
+          width: "100%",
+
+          backgroundColor: "#FFFFFF11",
+
+          marginTop: 16,
+          marginBottom: 16,
+        }}
+      />
+
+      <MarkdownViewer
+        className={isExpanded ? "" : "max6Lines truncate-overflow transition "}
+        src={description}
+        pOnly
+      />
+
+      <div
+        className="flex justify-center items-center gap-2"
+        style={{
+          marginTop: 16,
+        }}
+      >
+        <button
+          className="bg-gray-900 text-white px-5 py-3 flex items-center gap-2 rounded-full outline-none focus:scale-110 hover:scale-110 hover:bg-gray-950 active:scale-105 transition"
+          onClick={() => setIsExpanded(!isExpanded)}
+        >
+          <span>{isExpanded ? "Read Less" : "Read More"}</span>
+        </button>
+      </div>
+    </div>
+  );
+};
 
 const GlassContainer = ({ children, style, className }) => (
   <div

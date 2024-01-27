@@ -8,7 +8,7 @@ const options = {
   loop: true,
 };
 
-export default function GallerySection({ gallery }) {
+export default function ReviewsSection({ reviews }) {
   const [emblaRef, emblaApi] = useEmblaCarousel(options);
   const [prevBtnDisabled, setPrevBtnDisabled] = useState(true);
   const [nextBtnDisabled, setNextBtnDisabled] = useState(true);
@@ -53,40 +53,51 @@ export default function GallerySection({ gallery }) {
 
   return (
     <div
-      className="embla bg-gray-900 bg-opacity-10 dark:bg-white dark:bg-opacity-10"
-      ref={emblaRef}
+      className="embla bg-opacity-10 dark:bg-opacity-10 mt-2 "
       style={{
-        marginBlock: 48,
-        padding: "1rem",
-
-        backdropFilter: "blur(10px)",
-        borderRadius: "1rem",
+        maxWidth: "calc(100vw - 80px)",
       }}
+      ref={emblaRef}
     >
       <div className="embla__container" style={{ gap: "1rem" }}>
-        {gallery?.map((item, i) => (
-          <div key={i} className="embla__slide">
-            <img
-              // {...item.url}
-              src={item.url.src}
-              // src={.blurDataURL}
-              alt="Project I worked on"
-              quality={95}
-              className="w-full rounded-lg shadow-2xl"
+        {reviews?.map((item, i) => (
+          <div
+            key={i}
+            className="embla__slide"
+            style={{
+              aspectRatio: 3 / 1.15,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-start",
+              alignItems: "flex-start",
+            }}
+          >
+            <div className="flex gap-3">
+              <img
+                className="rounded-full w-12 h-12"
+                src={`https://source.boringavatars.com/marble/120/${item?.name}?colors=84595c,5c5985,111827`}
+              />
+
+              <div className="flex flex-col justify-center items-start gap-0">
+                <p className="text-xl font-bold">{item?.name}</p>
+                <p className="text-sm">{item?.title}</p>
+              </div>
+            </div>
+
+            <p
+              className="text-lg font-medium mt-4 py-3 px-6 relative"
               style={{
-                width: "100%",
-                // aspectRatio: 16 / 10,
-                maxHeight: 790,
-                objectFit: "contain",
-                borderRadius: "1rem",
-                overflow: "hidden",
+                backdropFilter: "blur(2px)",
+                borderRadius: ".5rem",
               }}
-            />
+            >
+              <q className="max4Lines">{item?.description}</q>
+            </p>
           </div>
         ))}
       </div>
 
-      <div
+      {/* <div
         className="embla__buttons"
         style={{
           display: "flex",
@@ -124,14 +135,15 @@ export default function GallerySection({ gallery }) {
             }}
           />
         </button>
-      </div>
+      </div> */}
 
       {/* Dots */}
       <div
-        className="embla__dots"
+        className="embla__dots md:bottom-[16px] sm:bottom-0"
         style={{
           position: "absolute",
-          bottom: "2rem",
+          // bottom: "2rem",
+          // bottom: "1rem",
           left: 0,
           right: 0,
           margin: "0 auto",
@@ -140,7 +152,7 @@ export default function GallerySection({ gallery }) {
           justifyContent: "center",
         }}
       >
-        {gallery?.map((_, index) => (
+        {reviews?.map((_, index) => (
           <button
             key={index}
             onClick={() => scrollTo(index)}
@@ -155,13 +167,11 @@ export default function GallerySection({ gallery }) {
               // }}
               className={`
               transition duration-200 ease-in-out 
-              text-slate-50${
+              hover:text-slate-300 active:text-slate-50 text-slate-50${
                 index === selectedIndex ? "" : "0"
-              } hover:text-slate-300 active:text-slate-50 
-              
-              dark:text-slate-90${
-                index === selectedIndex ? "" : "0"
-              } dark:hover:text-slate-700 dark:active:text-slate-900`}
+              } 
+              dark:hover:text-slate-700 dark:active:text-slate-900
+              dark:text-slate-90${index === selectedIndex ? "" : "0"} `}
             />
           </button>
         ))}

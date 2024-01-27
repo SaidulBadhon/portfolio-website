@@ -5,8 +5,6 @@ export default async function Page({ params }) {
   const { slug } = params;
   const project = projectsData.find((project) => project.slug === slug);
 
-  console.log("project", project);
-
   return <ProjectPage {...project} />;
 }
 

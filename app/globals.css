@@ -104,25 +104,39 @@ q::before {
     "e e c d"
     "e e f f"
     "e e f f";
+
+  --grid-height: 125px;
 }
 .a {
   grid-area: a;
-  height: 125px;
+  /* height: 125px; */
+  height: var(--grid-height);
+  /* max-height: var(--grid-height); */
 }
 .b {
   grid-area: b;
+  height: var(--grid-height);
+  /* max-height: var(--grid-height); */
 }
 .c {
   grid-area: c;
+  height: var(--grid-height) * 2;
+  /* max-height: var(--grid-height) * 2; */
 }
 .d {
   grid-area: d;
+  height: var(--grid-height) * 2;
+  /* max-height: var(--grid-height) * 2; */
 }
 .f {
   grid-area: f;
+  height: var(--grid-height) * 2;
+  /* max-height: var(--grid-height) * 2; */
 }
 .e {
   grid-area: e;
+  height: var(--grid-height) * 3;
+  /* max-height: var(--grid-height) * 3; */
 }
 
 @media screen and (max-width: 768px) {
