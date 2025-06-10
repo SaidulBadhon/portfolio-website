@@ -71,21 +71,9 @@ export default function ProjectPage(props) {
           </div>
         </div>
 
-        <div
-          className="profile-hero-container"
-          style={{
-            marginTop: 48,
-          }}
-        >
+        <div className="project-info-grid mt-12">
           {/* A */}
-          <GlassContainer
-            className="a"
-            style={{
-              display: "flex",
-              justifyContent: "flex-start",
-              alignItems: "center",
-              gap: "1rem",
-            }}
+          <GlassContainer className="flex items-center gap-4">
           >
             <motion.div
               initial={{
@@ -133,14 +121,7 @@ export default function ProjectPage(props) {
           </GlassContainer>
 
           {/* B */}
-          <GlassContainer
-            className="b"
-            style={{
-              display: "flex",
-              justifyContent: "flex-start",
-              alignItems: "center",
-              gap: "1rem",
-            }}
+          <GlassContainer className="flex items-center gap-4">
           >
             <motion.div
               initial={{
@@ -168,17 +149,7 @@ export default function ProjectPage(props) {
           </GlassContainer>
 
           {/* C */}
-          <GlassContainer
-            className="c"
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "flex-start",
-              alignItems: "flex-start",
-              gap: "1rem",
-
-              paddingTop: "2.6rem",
-            }}
+          <GlassContainer className="flex flex-col gap-4 pt-10">
           >
             <div style={{ display: "flex", gap: "1rem" }}>
               <motion.div
@@ -274,17 +245,8 @@ export default function ProjectPage(props) {
           </GlassContainer>
 
           {/* D */}
-          <GlassContainer className="d">
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "flex-start",
-                alignItems: "flex-start",
-                flexWrap: "wrap",
-                gap: ".5rem",
-              }}
-            >
-              {tags?.map((tag, i) => (
+          <GlassContainer className="flex flex-wrap items-start gap-2">
+            {tags?.map((tag, i) => (
                 <span
                   key={i}
                   className="
@@ -305,7 +267,6 @@ export default function ProjectPage(props) {
                   {tag}
                 </span>
               ))}
-            </div>
           </GlassContainer>
 
           {/* E */}
@@ -367,15 +328,7 @@ export default function ProjectPage(props) {
           </motion.div>
 
           {/* F */}
-          <GlassContainer
-            className="f"
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "flex-start",
-              gap: ".25rem",
-            }}
-          >
+          <GlassContainer className="flex flex-col gap-1">
             <p className="text-sm">Review</p>
 
             <ReviewsSection reviews={reviews} />
@@ -446,16 +399,8 @@ const Description = ({ description }) => {
 
 const GlassContainer = ({ children, style, className }) => (
   <div
-    className={`bg-gray-900 bg-opacity-10 dark:bg-white dark:bg-opacity-10 ${className}`}
-    style={{
-      backdropFilter: "blur(10px)",
-      borderRadius: "1rem",
-      padding: "1rem",
-
-      height: "100%",
-
-      ...style,
-    }}
+    className={`bg-gray-900/10 dark:bg-white/10 backdrop-blur-lg rounded-xl p-4 h-full ${className}`}
+    style={style}
   >
     {children}
   </div>

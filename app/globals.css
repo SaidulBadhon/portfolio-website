@@ -93,119 +93,25 @@ q::before {
   } 
 */
 
-/* Start of Project Page */
-.profile-hero-container {
+/* Project page */
+.project-info-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr 1fr;
   gap: 16px;
-  grid-template-areas:
-    "a b c d"
-    "e e c d"
-    "e e f f"
-    "e e f f";
-
-  --grid-height: 125px;
-}
-.a {
-  grid-area: a;
-  /* height: 125px; */
-  height: var(--grid-height);
-  /* max-height: var(--grid-height); */
-}
-.b {
-  grid-area: b;
-  height: var(--grid-height);
-  /* max-height: var(--grid-height); */
-}
-.c {
-  grid-area: c;
-  height: var(--grid-height) * 2;
-  /* max-height: var(--grid-height) * 2; */
-}
-.d {
-  grid-area: d;
-  height: var(--grid-height) * 2;
-  /* max-height: var(--grid-height) * 2; */
-}
-.f {
-  grid-area: f;
-  height: var(--grid-height) * 2;
-  /* max-height: var(--grid-height) * 2; */
-}
-.e {
-  grid-area: e;
-  height: var(--grid-height) * 3;
-  /* max-height: var(--grid-height) * 3; */
 }
 
-@media screen and (max-width: 768px) {
-  .profile-hero-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    gap: 16px;
-    grid-template-areas:
-      "a b"
-      "c c"
-      "d e"
-      "f f";
-  }
-  .a {
-    grid-area: a;
-  }
-  .b {
-    grid-area: b;
-  }
-  .c {
-    grid-area: c;
-  }
-  .d {
-    grid-area: d;
-  }
-  .f {
-    grid-area: f;
-  }
-  .e {
-    grid-area: e;
+@media screen and (min-width: 640px) {
+  .project-info-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media screen and (max-width: 640px) {
-  .profile-hero-container {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr;
-    gap: 16px;
-    grid-template-areas:
-      "a"
-      "b"
-      "c"
-      "d"
-      "e"
-      "f";
-  }
-  .a {
-    grid-area: a;
-  }
-  .b {
-    grid-area: b;
-  }
-  .c {
-    grid-area: c;
-  }
-  .d {
-    grid-area: d;
-  }
-  .f {
-    grid-area: f;
-  }
-  .e {
-    grid-area: e;
+@media screen and (min-width: 1024px) {
+  .project-info-grid {
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 
-/* End of Project Page */
+/* End of Project page */
 
 .embla {
   overflow: hidden;
