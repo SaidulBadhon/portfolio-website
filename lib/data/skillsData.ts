@@ -13,4 +13,5 @@ export const skillsData = [
   "Python",
   "Web3",
   "Blockchain",
-];
+] as const;
+

@@ -3,7 +3,6 @@ import { CgWorkAlt } from "react-icons/cg";
 import { FaReact } from "react-icons/fa";
 import { LuGraduationCap } from "react-icons/lu";
 
-// React, Next.js, JavaScript, Tailwind, Prisma and MongoDB
 export const experiencesData = [
   {
     title: "Graduated bootcamp",
@@ -29,4 +28,5 @@ export const experiencesData = [
     icon: React.createElement(FaReact),
     date: "2023 - present",
   },
-];
+] as const;
+

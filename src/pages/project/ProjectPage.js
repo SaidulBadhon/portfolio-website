@@ -74,7 +74,6 @@ export default function ProjectPage(props) {
         <div className="project-info-grid mt-12">
           {/* A */}
           <GlassContainer className="flex items-center gap-4">
-          >
             <motion.div
               initial={{
                 marginTop: 3,
@@ -122,7 +121,6 @@ export default function ProjectPage(props) {
 
           {/* B */}
           <GlassContainer className="flex items-center gap-4">
-          >
             <motion.div
               initial={{
                 marginTop: 3,
@@ -140,7 +138,6 @@ export default function ProjectPage(props) {
             >
               <TbStarsFilled style={{ fontSize: 48 }} />
             </motion.div>
-
             <div>
               <p className="text-sm pb-1">Final Rating</p>
 
@@ -150,7 +147,6 @@ export default function ProjectPage(props) {
 
           {/* C */}
           <GlassContainer className="flex flex-col gap-4 pt-10">
-          >
             <div style={{ display: "flex", gap: "1rem" }}>
               <motion.div
                 initial={{
@@ -247,9 +243,9 @@ export default function ProjectPage(props) {
           {/* D */}
           <GlassContainer className="flex flex-wrap items-start gap-2">
             {tags?.map((tag, i) => (
-                <span
-                  key={i}
-                  className="
+              <span
+                key={i}
+                className="
                     px-4 py-2 
                     bg-opacity-10 
                     
@@ -259,14 +255,14 @@ export default function ProjectPage(props) {
                   
                     bg-gray-900 
                   "
-                  // dark:active:bg-white
-                  style={{
-                    borderRadius: ".5rem",
-                  }}
-                >
-                  {tag}
-                </span>
-              ))}
+                // dark:active:bg-white
+                style={{
+                  borderRadius: ".5rem",
+                }}
+              >
+                {tag}
+              </span>
+            ))}
           </GlassContainer>
 
           {/* E */}
