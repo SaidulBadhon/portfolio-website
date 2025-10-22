@@ -48,8 +48,7 @@ export default function GallerySection({ gallery }) {
     // emblaApi.on("reInit", onInit);
     emblaApi.on("reInit", onSelect);
     emblaApi.on("select", onSelect);
-    // }, [emblaApi, onInit, onSelect]);
-  }, [emblaApi, +onSelect]);
+  }, [emblaApi, onSelect]);
 
   return (
     <div

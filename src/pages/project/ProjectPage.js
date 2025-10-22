@@ -301,15 +301,15 @@ export default function ProjectPage(props) {
               </p>
             </div>
 
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={coverArt?.src}
               alt="Project I worked on"
-              quality={95}
               style={{
                 zIndex: 1,
               }}
               className="absolute hidden sm:block bottom-0 left-0 w-[100%] rounded-t-lg shadow-2xl
-          transition 
+          transition
           group-hover:scale-[1.2]
           group-hover:translate-x-3
           group-hover:translate-y-3
