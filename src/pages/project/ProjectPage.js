@@ -1,335 +1,362 @@
 "use client";
 
-import React, { useState } from "react";
-import { FaExternalLinkAlt } from "react-icons/fa";
+import { useState } from "react";
+import { FaArrowLeft } from "react-icons/fa";
 import Rating from "@/components/Rating";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 import { MdDateRange } from "react-icons/md";
 import { TbStarsFilled } from "react-icons/tb";
 import { FaHourglassEnd } from "react-icons/fa";
 import { FaPeopleGroup } from "react-icons/fa6";
 import { MdEngineering } from "react-icons/md";
+import { HiOutlineExternalLink } from "react-icons/hi";
 
 import GallerySection from "./_components/GallerySection";
 import ReviewsSection from "./_components/ReviewsSection";
 
 import MarkdownViewer from "../../../components/MarkdownViewer";
 
+const fadeInAnimationVariants = {
+  initial: {
+    opacity: 0,
+    y: 20,
+  },
+  animate: (index) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: 0.05 * index,
+      duration: 0.3,
+    },
+  }),
+};
+
 export default function ProjectPage(props) {
   const {
     title,
     label,
-
     description,
     shortDescription,
     tags,
-
     coverArt,
     gallery,
-
     reviews,
-
-    // project
     projectDuration,
     projectTeam,
     projectRole,
     projectResponsibilities,
+    websiteUrl,
+    deliveredAt,
   } = props;
 
+  const [showResponsibilities, setShowResponsibilities] = useState(false);
+
   return (
-    <main className="flex flex-col items-center px-4">
+    <main className="flex flex-col items-center px-4 sm:px-6 lg:px-8 pb-20">
       <div className="max-w-7xl w-full">
-        <div
-          style={{
-            width: "100%",
-
-            // backgroundColor: "#FFFFFF11",
-
-            display: "grid",
-            gridTemplateColumns: "2fr 1fr",
-            gap: "1rem",
-          }}
+        {/* Breadcrumb Navigation */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className="mb-8"
         >
-          <h1
-            className="text-5xl font-bold"
-            style={{
-              lineHeight: 1.25,
-            }}
+          <Link
+            href="/#projects"
+            className="inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors group"
           >
-            {label}
-          </h1>
+            <FaArrowLeft className="group-hover:-translate-x-1 transition-transform" />
+            <span>Back to Projects</span>
+          </Link>
+        </motion.div>
 
-          <div className="flex flex-col justify-center items-end">
-            <a
-              href="/projects/123"
-              className="group bg-gray-900 text-white px-5 py-5 flex items-center gap-2 rounded-full outline-none focus:scale-110 hover:scale-110 hover:bg-gray-950 active:scale-105 transition"
-              target="_blank"
-            >
-              <FaExternalLinkAlt className="opacity-70 group-hover:scale-140 transition" />
-            </a>
+        {/* Hero Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mb-12"
+        >
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6 mb-8">
+            <div className="flex-1">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
+                {label || title}
+              </h1>
+              {shortDescription && (
+                <p className="text-lg sm:text-xl text-gray-700 dark:text-gray-300 leading-relaxed">
+                  {shortDescription}
+                </p>
+              )}
+            </div>
+
+            {websiteUrl && (
+              <motion.a
+                href={websiteUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="group bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-6 py-4 flex items-center gap-3 rounded-full outline-none hover:bg-gray-800 dark:hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl"
+              >
+                <span className="font-medium">Visit Project</span>
+                <HiOutlineExternalLink className="text-xl group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+              </motion.a>
+            )}
           </div>
-        </div>
 
-        <div className="project-info-grid mt-12">
-          {/* A */}
-          <GlassContainer className="flex items-center gap-4">
+          {/* Cover Image */}
+          {coverArt && (
             <motion.div
-              initial={{
-                marginTop: 3,
-                opacity: 1,
-                scale: 0.75,
-                rotate: -180,
-              }}
-              animate={{ marginTop: 3, opacity: 1, scale: 1, rotate: 0 }}
-              transition={{
-                type: "tween",
-                duration: 0.4,
-
-                delay: 0.1,
-              }}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="relative w-full h-[300px] sm:h-[400px] lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl"
             >
-              <MdDateRange style={{ fontSize: 48 }} />
+              <img
+                src={coverArt?.src}
+                alt={title}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
             </motion.div>
-            <div>
-              <p className="text-sm">Delivered at</p>
-              <p className="text-xl font-bold">2021-03-19</p>
-            </div>
-            {/* A
-              <p className="mt-4 text-xl">
-                The project ID is 
-                <code className="text-red-500">{projectId}</code>. 
-              </p>
+          )}
+        </motion.div>
 
-              <p className="mt-4 text-xl">
-                The page ID is <code className="text-red-500">{pageId}</code>.
-              </p>
-
-              <p className="mt-4 text-xl">
-                The page slug is <code className="text-red-500">{pageSlug}</code>.
-              </p>
-
-              <p className="mt-4 text-xl">
-                The page path is <code className="text-red-500">{pagePath}</code>.
-              </p>
-
-              <p className="mt-4 text-xl">
-                The page URL is <code className="text-red-500">{pageUrl}</code>.
-              </p> 
-            */}
-          </GlassContainer>
-
-          {/* B */}
-          <GlassContainer className="flex items-center gap-4">
+        {/* Project Info Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-12">
+          {/* Delivered Date */}
+          {deliveredAt && (
             <motion.div
-              initial={{
-                marginTop: 3,
-                opacity: 1,
-                scale: 0.75,
-                rotate: -180,
-              }}
-              animate={{ marginTop: 3, opacity: 1, scale: 1, rotate: 0 }}
-              transition={{
-                type: "tween",
-                duration: 0.4,
-
-                delay: 0.3,
-              }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.1 }}
             >
-              <TbStarsFilled style={{ fontSize: 48 }} />
+              <GlassContainer className="flex items-center gap-4 h-full">
+                <motion.div
+                  initial={{ scale: 0.75, rotate: -180 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ type: "spring", duration: 0.6, delay: 0.2 }}
+                  className="text-gray-700 dark:text-gray-300"
+                >
+                  <MdDateRange className="text-4xl sm:text-5xl" />
+                </motion.div>
+                <div>
+                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                    Delivered
+                  </p>
+                  <p className="text-lg sm:text-xl font-bold">{deliveredAt}</p>
+                </div>
+              </GlassContainer>
             </motion.div>
-            <div>
-              <p className="text-sm pb-1">Final Rating</p>
+          )}
 
-              <Rating size={3} rate={3} />
-            </div>
-          </GlassContainer>
+          {/* Rating */}
+          {reviews && reviews.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.2 }}
+            >
+              <GlassContainer className="flex items-center gap-4 h-full">
+                <motion.div
+                  initial={{ scale: 0.75, rotate: -180 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ type: "spring", duration: 0.6, delay: 0.3 }}
+                  className="text-gray-700 dark:text-gray-300"
+                >
+                  <TbStarsFilled className="text-4xl sm:text-5xl" />
+                </motion.div>
+                <div>
+                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">
+                    Client Rating
+                  </p>
+                  <Rating size={3} rate={5} />
+                </div>
+              </GlassContainer>
+            </motion.div>
+          )}
 
-          {/* C */}
-          <GlassContainer className="flex flex-col gap-4 pt-10">
-            <div style={{ display: "flex", gap: "1rem" }}>
-              <motion.div
-                initial={{
-                  marginTop: 3,
-                  opacity: 1,
-                  scale: 0.75,
-                  rotate: -180,
-                }}
-                animate={{ marginTop: 3, opacity: 1, scale: 1, rotate: 0 }}
-                transition={{
-                  type: "tween",
-                  duration: 0.4,
-
-                  delay: 0.2,
-                }}
-              >
-                <FaHourglassEnd style={{ fontSize: 40 }} />
-              </motion.div>
-
-              <div>
-                <p className="text-sm">Project Duration</p>
-                <p className="text-xl font-bold">
-                  {projectDuration}{" "}
-                  <span className="font-normal" style={{ fontSize: ".75rem" }}>
-                    Months
-                  </span>
-                </p>
-              </div>
-            </div>
-
-            {/* projectTeam */}
-            <div style={{ display: "flex", gap: "1rem" }}>
-              <motion.div
-                initial={{
-                  marginTop: 3,
-                  opacity: 1,
-                  scale: 0.75,
-                  rotate: -180,
-                }}
-                animate={{ marginTop: 3, opacity: 1, scale: 1, rotate: 0 }}
-                transition={{
-                  type: "tween",
-                  duration: 0.4,
-
-                  delay: 0.2,
-                }}
-              >
-                <FaPeopleGroup style={{ fontSize: 40 }} />
-              </motion.div>
-
-              <div>
-                <p className="text-sm">Team</p>
-                <p className="text-xl font-bold">
-                  {projectTeam}{" "}
-                  <span className="font-normal" style={{ fontSize: ".75rem" }}>
-                    Members
-                  </span>
-                </p>
-              </div>
-            </div>
-
-            {/* projectRole */}
-            <div style={{ display: "flex", gap: "1rem" }}>
-              <motion.div
-                initial={{
-                  marginTop: 3,
-                  opacity: 1,
-                  scale: 0.75,
-                  rotate: -180,
-                }}
-                animate={{ marginTop: 3, opacity: 1, scale: 1, rotate: 0 }}
-                transition={{
-                  type: "tween",
-                  duration: 0.4,
-
-                  delay: 0.2,
-                }}
-              >
-                <MdEngineering style={{ fontSize: 40 }} />
-              </motion.div>
-
-              <div>
-                <p className="text-sm">My Role</p>
-                <p className="text-xl font-bold">{projectRole}</p>
-              </div>
-            </div>
-
-            <button className="text-sky-100 hover:text-sky-500 transition-all font-medium	">
-              See Responsibilities
-            </button>
-            {/* <p className="text-sm">{shortDescription}</p> */}
-          </GlassContainer>
-
-          {/* D */}
-          <GlassContainer className="flex flex-wrap items-start gap-2">
-            {tags?.map((tag, i) => (
-              <span
-                key={i}
-                className="
-                    px-4 py-2 
-                    bg-opacity-10 
-                    
-                    hover:bg-opacity-30 
-                    dark:bg-opacity-10 
-                    hover:dark:bg-opacity-30 
-                  
-                    bg-gray-900 
-                  "
-                // dark:active:bg-white
-                style={{
-                  borderRadius: ".5rem",
-                }}
-              >
-                {tag}
-              </span>
-            ))}
-          </GlassContainer>
-
-          {/* E */}
+          {/* Project Details - Spans 2 columns on large screens */}
           <motion.div
-            style={{
-              scale: 1,
-              opacity: 1,
-
-              overflow: "hidden",
-              backdropFilter: "blur(10px)",
-              borderRadius: "1rem",
-              padding: "1rem",
-              // height: "100%",
-
-              position: "relative",
-            }}
-            className="bg-gray-900 bg-opacity-10 dark:bg-white dark:bg-opacity-10 group e"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.3 }}
+            className="sm:col-span-2"
           >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
+            <GlassContainer className="h-full">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {/* Duration */}
+                {projectDuration && (
+                  <div className="flex items-center gap-3">
+                    <motion.div
+                      initial={{ scale: 0.75, rotate: -180 }}
+                      animate={{ scale: 1, rotate: 0 }}
+                      transition={{ type: "spring", duration: 0.6, delay: 0.4 }}
+                      className="text-gray-700 dark:text-gray-300"
+                    >
+                      <FaHourglassEnd className="text-3xl sm:text-4xl" />
+                    </motion.div>
+                    <div>
+                      <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                        Duration
+                      </p>
+                      <p className="text-lg sm:text-xl font-bold">
+                        {projectDuration}{" "}
+                        <span className="text-xs font-normal">Months</span>
+                      </p>
+                    </div>
+                  </div>
+                )}
 
-                zIndex: 999,
-              }}
-            >
-              <p
-                className="text-sm opacity-0 translate-x-0
-                transition 
-                  group-hover:opacity-[1]
-                  group-hover:translate-x-8
-"
-              >
-                Screenshots
-              </p>
-            </div>
+                {/* Team Size */}
+                {projectTeam && (
+                  <div className="flex items-center gap-3">
+                    <motion.div
+                      initial={{ scale: 0.75, rotate: -180 }}
+                      animate={{ scale: 1, rotate: 0 }}
+                      transition={{ type: "spring", duration: 0.6, delay: 0.5 }}
+                      className="text-gray-700 dark:text-gray-300"
+                    >
+                      <FaPeopleGroup className="text-3xl sm:text-4xl" />
+                    </motion.div>
+                    <div>
+                      <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                        Team Size
+                      </p>
+                      <p className="text-lg sm:text-xl font-bold">
+                        {projectTeam}{" "}
+                        <span className="text-xs font-normal">Members</span>
+                      </p>
+                    </div>
+                  </div>
+                )}
 
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={coverArt?.src}
-              alt="Project I worked on"
-              style={{
-                zIndex: 1,
-              }}
-              className="absolute hidden sm:block bottom-0 left-0 w-[100%] rounded-t-lg shadow-2xl
-          transition
-          group-hover:scale-[1.2]
-          group-hover:translate-x-3
-          group-hover:translate-y-3
-          group-hover:rotate-3
+                {/* Role */}
+                {projectRole && (
+                  <div className="flex items-center gap-3">
+                    <motion.div
+                      initial={{ scale: 0.75, rotate: -180 }}
+                      animate={{ scale: 1, rotate: 0 }}
+                      transition={{ type: "spring", duration: 0.6, delay: 0.6 }}
+                      className="text-gray-700 dark:text-gray-300"
+                    >
+                      <MdEngineering className="text-3xl sm:text-4xl" />
+                    </motion.div>
+                    <div>
+                      <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                        My Role
+                      </p>
+                      <p className="text-base sm:text-lg font-bold">
+                        {projectRole}
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
 
-          group-even:group-hover:translate-x-3
-          group-even:group-hover:translate-y-3
-          group-even:group-hover:rotate-2
-
-          group-even:right-[initial] group-even:-left-40"
-            />
+              {/* Responsibilities Button */}
+              {projectResponsibilities &&
+                projectResponsibilities.length > 0 && (
+                  <button
+                    onClick={() =>
+                      setShowResponsibilities(!showResponsibilities)
+                    }
+                    className="mt-4 text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
+                  >
+                    {showResponsibilities
+                      ? "Hide Responsibilities"
+                      : "View Responsibilities"}
+                  </button>
+                )}
+            </GlassContainer>
           </motion.div>
-
-          {/* F */}
-          <GlassContainer className="flex flex-col gap-1">
-            <p className="text-sm">Review</p>
-
-            <ReviewsSection reviews={reviews} />
-          </GlassContainer>
         </div>
+
+        {/* Responsibilities Section */}
+        {showResponsibilities &&
+          projectResponsibilities &&
+          projectResponsibilities.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+              className="mb-12"
+            >
+              <GlassContainer>
+                <h3 className="text-xl sm:text-2xl font-bold mb-4">
+                  Key Responsibilities
+                </h3>
+                <ul className="space-y-3">
+                  {projectResponsibilities.map((responsibility, index) => (
+                    <motion.li
+                      key={index}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      className="flex items-start gap-3"
+                    >
+                      <span className="text-blue-600 dark:text-blue-400 mt-1">
+                        •
+                      </span>
+                      <span className="text-gray-700 dark:text-gray-300">
+                        {responsibility}
+                      </span>
+                    </motion.li>
+                  ))}
+                </ul>
+              </GlassContainer>
+            </motion.div>
+          )}
+
+        {/* Technologies Used */}
+        {tags && tags.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="mb-12"
+          >
+            <h2 className="text-2xl sm:text-3xl font-bold mb-6">
+              Technologies Used
+            </h2>
+            <div className="flex flex-wrap gap-3">
+              {tags.map((tag, index) => (
+                <motion.span
+                  key={index}
+                  custom={index}
+                  variants={fadeInAnimationVariants}
+                  initial="initial"
+                  whileInView="animate"
+                  viewport={{ once: true }}
+                  whileHover={{ scale: 1.05 }}
+                  className="px-4 py-2 bg-gray-900/10 dark:bg-white/10 hover:bg-gray-900/20 dark:hover:bg-white/20 backdrop-blur-sm rounded-lg font-medium transition-all cursor-default"
+                >
+                  {tag}
+                </motion.span>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
+        {/* Client Reviews */}
+        {reviews && reviews.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+            className="mb-12"
+          >
+            <GlassContainer>
+              <h2 className="text-2xl sm:text-3xl font-bold mb-6">
+                Client Reviews
+              </h2>
+              <ReviewsSection reviews={reviews} />
+            </GlassContainer>
+          </motion.div>
+        )}
 
         {/* Description */}
         <Description description={description} />
@@ -344,58 +371,52 @@ export default function ProjectPage(props) {
 const Description = ({ description }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
+  if (!description) return null;
+
   return (
-    <div
-      className="bg-gray-900 bg-opacity-10 dark:bg-white dark:bg-opacity-10"
-      style={{
-        backdropFilter: "blur(10px)",
-        borderRadius: "1rem",
-        padding: "1rem",
-        height: "100%",
-
-        marginTop: 48,
-      }}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.6 }}
+      className="mb-12"
     >
-      <h1 className="text-3xl font-bold">Description</h1>
+      <GlassContainer className="p-6 sm:p-8">
+        <h2 className="text-2xl sm:text-3xl font-bold mb-6">
+          Project Description
+        </h2>
 
-      <div
-        style={{
-          height: 1,
-          width: "100%",
+        <div className="relative">
+          <MarkdownViewer
+            className={`prose prose-gray dark:prose-invert max-w-none transition-all duration-300 ${
+              isExpanded ? "" : "max-h-[300px] overflow-hidden"
+            }`}
+            src={description}
+            pOnly
+          />
 
-          backgroundColor: "#FFFFFF11",
+          {!isExpanded && (
+            <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-gray-100 dark:from-gray-900 to-transparent pointer-events-none" />
+          )}
+        </div>
 
-          marginTop: 16,
-          marginBottom: 16,
-        }}
-      />
-
-      <MarkdownViewer
-        className={isExpanded ? "" : "max6Lines truncate-overflow transition "}
-        src={description}
-        pOnly
-      />
-
-      <div
-        className="flex justify-center items-center gap-2"
-        style={{
-          marginTop: 16,
-        }}
-      >
-        <button
-          className="bg-gray-900 text-white px-5 py-3 flex items-center gap-2 rounded-full outline-none focus:scale-110 hover:scale-110 hover:bg-gray-950 active:scale-105 transition"
-          onClick={() => setIsExpanded(!isExpanded)}
-        >
-          <span>{isExpanded ? "Read Less" : "Read More"}</span>
-        </button>
-      </div>
-    </div>
+        <div className="flex justify-center mt-6">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-6 py-3 rounded-full font-medium hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors shadow-lg"
+            onClick={() => setIsExpanded(!isExpanded)}
+          >
+            {isExpanded ? "Show Less" : "Read More"}
+          </motion.button>
+        </div>
+      </GlassContainer>
+    </motion.div>
   );
 };
 
 const GlassContainer = ({ children, style, className }) => (
   <div
-    className={`bg-gray-900/10 dark:bg-white/10 backdrop-blur-lg rounded-xl p-4 h-full ${className}`}
+    className={`bg-gray-900/10 dark:bg-white/10 backdrop-blur-lg rounded-xl p-4 sm:p-6 h-full ${className}`}
     style={style}
   >
     {children}

@@ -1,9 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 
-import { IoIosArrowForward } from "react-icons/io";
-import { GoDotFill } from "react-icons/go";
-
 const options = {
   loop: true,
 };
@@ -51,47 +48,34 @@ export default function ReviewsSection({ reviews }) {
   }, [emblaApi, onSelect]);
 
   return (
-    <div
-      className="embla bg-opacity-10 dark:bg-opacity-10 mt-2 "
-      style={{
-        maxWidth: "calc(100vw - 80px)",
-      }}
-      ref={emblaRef}
-    >
+    <div className="embla mt-4" ref={emblaRef}>
       <div className="embla__container" style={{ gap: "1rem" }}>
         {reviews?.map((item, i) => (
           <div
             key={i}
-            className="embla__slide"
-            style={{
-              aspectRatio: 3 / 1.15,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "flex-start",
-              alignItems: "flex-start",
-            }}
+            className="embla__slide min-w-0 flex-[0_0_100%] sm:flex-[0_0_80%] lg:flex-[0_0_60%]"
           >
-            <div className="flex gap-3">
-              <img
-                className="rounded-full w-12 h-12"
-                src={`https://source.boringavatars.com/marble/120/${item?.name}?colors=84595c,5c5985,111827`}
-              />
+            <div className="bg-gray-900/5 dark:bg-white/5 backdrop-blur-sm rounded-xl p-6 h-full flex flex-col">
+              <div className="flex gap-4 mb-4">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  className="rounded-full w-14 h-14 flex-shrink-0"
+                  src={`https://source.boringavatars.com/marble/120/${item?.name}?colors=84595c,5c5985,111827`}
+                  alt={item?.name}
+                />
 
-              <div className="flex flex-col justify-center items-start gap-0">
-                <p className="text-xl font-bold">{item?.name}</p>
-                <p className="text-sm">{item?.title}</p>
+                <div className="flex flex-col justify-center">
+                  <p className="text-lg font-bold">{item?.name}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    {item?.title}
+                  </p>
+                </div>
               </div>
-            </div>
 
-            <p
-              className="text-lg font-medium mt-4 py-3 px-6 relative"
-              style={{
-                backdropFilter: "blur(2px)",
-                borderRadius: ".5rem",
-              }}
-            >
-              <q className="max4Lines">{item?.description}</q>
-            </p>
+              <blockquote className="text-base text-gray-700 dark:text-gray-300 leading-relaxed italic flex-1">
+                &ldquo;{item?.description}&rdquo;
+              </blockquote>
+            </div>
           </div>
         ))}
       </div>
@@ -136,45 +120,23 @@ export default function ReviewsSection({ reviews }) {
         </button>
       </div> */}
 
-      {/* Dots */}
-      <div
-        className="embla__dots md:bottom-[16px] sm:bottom-0"
-        style={{
-          position: "absolute",
-          // bottom: "2rem",
-          // bottom: "1rem",
-          left: 0,
-          right: 0,
-          margin: "0 auto",
-
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
-        {reviews?.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => scrollTo(index)}
-            className={"embla__dot".concat(
-              index === selectedIndex ? " embla__dot--selected" : ""
-            )}
-          >
-            <GoDotFill
-              // style={{
-              //   color: index === selectedIndex ? "#ffffff" : "#ffffff22",
-              //   fontSize: index === selectedIndex ? "1.25rem" : "1rem",
-              // }}
-              className={`
-              transition duration-200 ease-in-out 
-              hover:text-slate-300 active:text-slate-50 text-slate-50${
-                index === selectedIndex ? "" : "0"
-              } 
-              dark:hover:text-slate-700 dark:active:text-slate-900
-              dark:text-slate-90${index === selectedIndex ? "" : "0"} `}
+      {/* Navigation Dots */}
+      {reviews && reviews.length > 1 && (
+        <div className="flex justify-center items-center gap-2 mt-6">
+          {reviews.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => scrollTo(index)}
+              className={`transition-all duration-200 ${
+                index === selectedIndex
+                  ? "w-8 h-2 bg-gray-700 dark:bg-gray-300"
+                  : "w-2 h-2 bg-gray-400 dark:bg-gray-600 hover:bg-gray-600 dark:hover:bg-gray-400"
+              } rounded-full`}
+              aria-label={`Go to review ${index + 1}`}
             />
-          </button>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

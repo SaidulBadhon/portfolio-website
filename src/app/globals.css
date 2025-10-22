@@ -94,37 +94,18 @@ q::before {
 */
 
 /* Project page */
-.project-info-grid {
-  display: grid;
-  gap: 16px;
-}
-
-@media screen and (min-width: 640px) {
-  .project-info-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media screen and (min-width: 1024px) {
-  .project-info-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-/* End of Project page */
-
 .embla {
   overflow: hidden;
+  position: relative;
 }
+
 .embla__container {
   display: flex;
 }
+
 .embla__slide {
   flex: 0 0 100%;
   min-width: 0;
-
-  aspect-ratio: 16 / 8;
-
   display: flex;
   justify-content: center;
   align-items: center;

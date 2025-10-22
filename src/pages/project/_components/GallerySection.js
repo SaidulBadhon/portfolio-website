@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 
 import { IoIosArrowForward } from "react-icons/io";
-import { GoDotFill } from "react-icons/go";
 
 const options = {
   loop: true,
@@ -51,119 +50,69 @@ export default function GallerySection({ gallery }) {
   }, [emblaApi, onSelect]);
 
   return (
-    <div
-      className="embla bg-gray-900 bg-opacity-10 dark:bg-white dark:bg-opacity-10"
-      ref={emblaRef}
-      style={{
-        marginBlock: 48,
-        padding: "1rem",
+    <div className="mb-12">
+      <h2 className="text-2xl sm:text-3xl font-bold mb-6">Project Gallery</h2>
 
-        backdropFilter: "blur(10px)",
-        borderRadius: "1rem",
-      }}
-    >
-      <div className="embla__container" style={{ gap: "1rem" }}>
-        {gallery?.map((item, i) => (
-          <div key={i} className="embla__slide">
-            <img
-              // {...item.url}
-              src={item.url.src}
-              // src={.blurDataURL}
-              alt="Project I worked on"
-              quality={95}
-              className="w-full rounded-lg shadow-2xl"
-              style={{
-                width: "100%",
-                // aspectRatio: 16 / 10,
-                maxHeight: 790,
-                objectFit: "contain",
-                borderRadius: "1rem",
-                overflow: "hidden",
-              }}
-            />
+      <div
+        className="embla bg-gray-900/10 dark:bg-white/10 backdrop-blur-lg rounded-2xl p-4 sm:p-6"
+        ref={emblaRef}
+      >
+        <div className="embla__container" style={{ gap: "1rem" }}>
+          {gallery?.map((item, i) => (
+            <div key={i} className="embla__slide">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={item.url.src}
+                alt={item.description || `Project screenshot ${i + 1}`}
+                className="w-full rounded-xl shadow-2xl object-contain"
+                style={{
+                  maxHeight: "600px",
+                }}
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* Navigation Buttons */}
+        {gallery && gallery.length > 1 && (
+          <div className="absolute inset-0 flex items-center justify-between px-4 pointer-events-none">
+            <button
+              className="pointer-events-auto w-12 h-12 sm:w-14 sm:h-14 flex justify-center items-center rounded-full bg-gray-900/50 dark:bg-white/50 text-white dark:text-gray-900 hover:bg-gray-900/70 dark:hover:bg-white/70 transition-all disabled:opacity-30 disabled:cursor-not-allowed backdrop-blur-sm"
+              onClick={scrollPrev}
+              disabled={prevBtnDisabled}
+              aria-label="Previous image"
+            >
+              <IoIosArrowForward className="text-2xl rotate-180" />
+            </button>
+
+            <button
+              className="pointer-events-auto w-12 h-12 sm:w-14 sm:h-14 flex justify-center items-center rounded-full bg-gray-900/50 dark:bg-white/50 text-white dark:text-gray-900 hover:bg-gray-900/70 dark:hover:bg-white/70 transition-all disabled:opacity-30 disabled:cursor-not-allowed backdrop-blur-sm"
+              onClick={scrollNext}
+              disabled={nextBtnDisabled}
+              aria-label="Next image"
+            >
+              <IoIosArrowForward className="text-2xl" />
+            </button>
           </div>
-        ))}
-      </div>
+        )}
 
-      <div
-        className="embla__buttons"
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          padding: "0 2rem",
-
-          position: "absolute",
-          top: "50%",
-          left: 0,
-          right: 0,
-          transform: "translateY(-50%)",
-        }}
-      >
-        <button
-          className="h-[5rem] w-[5rem] flex justify-center items-center rounded-full transition duration-200 ease-in-out backdrop-blur-sm bg-transparent text-white hover:bg-[#ffffff11] active:bg-[#ffffff22]"
-          onClick={scrollPrev}
-          disabled={prevBtnDisabled}
-        >
-          <IoIosArrowForward
-            style={{
-              transform: "rotate(180deg)",
-              fontSize: "2rem",
-            }}
-          />
-        </button>
-
-        <button
-          className="h-[5rem] w-[5rem] flex justify-center items-center rounded-full transition duration-200 ease-in-out backdrop-blur-sm bg-transparent text-white hover:bg-[#ffffff11] active:bg-[#ffffff22]"
-          onClick={scrollNext}
-          disabled={nextBtnDisabled}
-        >
-          <IoIosArrowForward
-            style={{
-              fontSize: "2rem",
-            }}
-          />
-        </button>
-      </div>
-
-      {/* Dots */}
-      <div
-        className="embla__dots"
-        style={{
-          position: "absolute",
-          bottom: "2rem",
-          left: 0,
-          right: 0,
-          margin: "0 auto",
-
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
-        {gallery?.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => scrollTo(index)}
-            className={"embla__dot".concat(
-              index === selectedIndex ? " embla__dot--selected" : ""
-            )}
-          >
-            <GoDotFill
-              // style={{
-              //   color: index === selectedIndex ? "#ffffff" : "#ffffff22",
-              //   fontSize: index === selectedIndex ? "1.25rem" : "1rem",
-              // }}
-              className={`
-              transition duration-200 ease-in-out 
-              text-slate-50${
-                index === selectedIndex ? "" : "0"
-              } hover:text-slate-300 active:text-slate-50 
-              
-              dark:text-slate-90${
-                index === selectedIndex ? "" : "0"
-              } dark:hover:text-slate-700 dark:active:text-slate-900`}
-            />
-          </button>
-        ))}
+        {/* Navigation Dots */}
+        {gallery && gallery.length > 1 && (
+          <div className="flex justify-center items-center gap-2 mt-6">
+            {gallery.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => scrollTo(index)}
+                className={`transition-all duration-200 ${
+                  index === selectedIndex
+                    ? "w-8 h-2 bg-gray-700 dark:bg-gray-300"
+                    : "w-2 h-2 bg-gray-400 dark:bg-gray-600 hover:bg-gray-600 dark:hover:bg-gray-400"
+                } rounded-full`}
+                aria-label={`Go to image ${index + 1}`}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
