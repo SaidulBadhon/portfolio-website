@@ -37,16 +37,52 @@ export default function Experience() {
                     : "0.4rem solid rgba(255, 255, 255, 0.5)",
               }}
               date={item.date}
-              icon={item.icon}
+              icon={
+                <img
+                  src={item.companyLogo}
+                  alt={`${item.company} logo`}
+                  className="w-full h-full rounded-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.style.display = "none";
+                    const parent = e.currentTarget.parentElement;
+                    if (parent) {
+                      parent.innerHTML = item.company.charAt(0);
+                      parent.style.display = "flex";
+                      parent.style.alignItems = "center";
+                      parent.style.justifyContent = "center";
+                      parent.style.fontSize = "1.5rem";
+                      parent.style.fontWeight = "bold";
+                    }
+                  }}
+                />
+              }
               iconStyle={{
                 background:
                   theme === "light" ? "white" : "rgba(255, 255, 255, 0.15)",
-                fontSize: "1.5rem",
+                boxShadow:
+                  "0 0 0 4px #fff, inset 0 2px 0 rgba(0,0,0,.08), 0 3px 0 4px rgba(0,0,0,.05)",
               }}
             >
-              <h3 className="font-semibold capitalize">{item.title}</h3>
-              <p className="font-normal !mt-0">{item.location}</p>
-              <p className="!mt-1 !font-normal text-gray-700 dark:text-white/75">
+              <h3 className="text-xl font-bold !mt-0 text-gray-900 dark:text-white">
+                {item.title}
+              </h3>
+
+              <p className="!mt-1 !text-sm font-semibold text-gray-800 dark:text-gray-300">
+                <span>{item.company}</span>
+
+                <span className="px-2">•</span>
+
+                <span className="!mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">
+                  {item.location}
+                </span>
+              </p>
+              {/* <p className="!mt-1 text-base font-semibold text-gray-800 dark:text-gray-300">
+                {item.company}
+              </p>
+              <p className="!mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">
+                {item.location}
+              </p> */}
+              <p className="!mt-2 text-xs leading-relaxed text-gray-700 dark:text-white/75">
                 {item.description}
               </p>
             </VerticalTimelineElement>
@@ -56,4 +92,3 @@ export default function Experience() {
     </section>
   );
 }
-
