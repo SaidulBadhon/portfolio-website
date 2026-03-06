@@ -1,35 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import SectionHeading from "./section-heading";
 import { useSectionInView } from "@/lib/hooks";
 import { projectsCardData } from "@/lib/data/projectsCardData";
-import type { ProjectIconKey } from "@/lib/data/projectsCardData";
-import ProjectModal from "./project-modal";
-import {
-  FaRocket,
-  FaCode,
-  FaBolt,
-  FaBrain,
-  FaCubes,
-  FaDatabase,
-  FaGlobe,
-  FaArrowRight,
-} from "react-icons/fa";
-
-const iconMap: Record<
-  ProjectIconKey,
-  React.ComponentType<{ size?: number; className?: string }>
-> = {
-  rocket: FaRocket,
-  code: FaCode,
-  bolt: FaBolt,
-  brain: FaBrain,
-  cubes: FaCubes,
-  database: FaDatabase,
-  globe: FaGlobe,
-};
+import { projectIconMap } from "@/lib/projectIcons";
+import { FaArrowRight } from "react-icons/fa";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -47,20 +25,6 @@ const staggerContainer = {
 
 export default function Projects() {
   const { ref } = useSectionInView("Projects", 0.5);
-  const [selectedProject, setSelectedProject] = useState<
-    (typeof projectsCardData)[number] | null
-  >(null);
-  const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
-
-  const openProjectModal = (project: (typeof projectsCardData)[number]) => {
-    setSelectedProject(project);
-    setIsProjectModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsProjectModalOpen(false);
-    setSelectedProject(null);
-  };
 
   return (
     <section
@@ -77,11 +41,6 @@ export default function Projects() {
           className="mb-16 text-center"
         >
           <SectionHeading>My projects</SectionHeading>
-          {/* <div className="mx-auto mb-4 h-1 w-24 rounded-full bg-gradient-to-r from-violet-500 to-cyan-500" />
-          <p className="mx-auto max-w-2xl text-gray-600 dark:text-slate-400">
-            Click on any project to view detailed information about features,
-            technologies, and my role.
-          </p> */}
         </motion.div>
 
         <motion.div
@@ -92,87 +51,78 @@ export default function Projects() {
           className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
         >
           {projectsCardData.map((project) => {
-            const IconComponent = iconMap[project.icon];
+            const IconComponent = projectIconMap[project.icon];
             return (
               <motion.div
                 key={project.id}
                 variants={fadeInUp}
                 whileHover={{ y: -5, scale: 1.02 }}
                 transition={{ duration: 0.2 }}
-                onClick={() => openProjectModal(project)}
-                className="cursor-pointer"
               >
-                <div className="group h-full overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg backdrop-blur-sm transition-all duration-300 hover:border-violet-500/30 dark:border-white/5 dark:bg-slate-800/30">
-                  <div
-                    className={`h-2 bg-gradient-to-r ${project.gradient}`}
-                  />
-                  <div className="relative h-40 overflow-hidden">
+                <Link href={`/projects/${project.id}`} className="block cursor-pointer">
+                  <div className="group h-full overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg backdrop-blur-sm transition-all duration-300 hover:border-violet-500/30 dark:border-white/5 dark:bg-slate-800/30">
                     <div
-                      className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-20`}
+                      className={`h-2 bg-gradient-to-r ${project.gradient}`}
                     />
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={project.image}
-                      alt={project.title}
-                      className="h-full w-full object-cover opacity-60 transition-all duration-500 group-hover:scale-105 group-hover:opacity-80"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-white via-white/50 to-transparent dark:from-slate-900 dark:via-slate-900/50 dark:to-transparent" />
-                    <div className="absolute right-3 top-3">
-                      <span className="rounded-full bg-black/60 px-2 py-1 text-xs text-white backdrop-blur-sm dark:bg-slate-800/80 dark:text-slate-300">
-                        {project.type}
-                      </span>
+                    <div className="relative h-40 overflow-hidden">
+                      <div
+                        className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-20`}
+                      />
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={project.image}
+                        alt={project.title}
+                        className="h-full w-full object-cover opacity-60 transition-all duration-500 group-hover:scale-105 group-hover:opacity-80"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-white via-white/50 to-transparent dark:from-slate-900 dark:via-slate-900/50 dark:to-transparent" />
+                      <div className="absolute right-3 top-3">
+                        <span className="rounded-full bg-black/60 px-2 py-1 text-xs text-white backdrop-blur-sm dark:bg-slate-800/80 dark:text-slate-300">
+                          {project.type}
+                        </span>
+                      </div>
+                      <div className="absolute bottom-3 right-3 opacity-0 transition-opacity group-hover:opacity-100">
+                        <div className="flex items-center gap-1 text-sm font-medium text-violet-400">
+                          View Details <FaArrowRight size={14} />
+                        </div>
+                      </div>
                     </div>
-                    <div className="absolute bottom-3 right-3 opacity-0 transition-opacity group-hover:opacity-100">
-                      <div className="flex items-center gap-1 text-sm font-medium text-violet-400">
-                        View Details <FaArrowRight size={14} />
+                    <div className="-mt-8 relative px-4 pb-2 pt-4">
+                      <div
+                        className={`inline-flex rounded-xl bg-gradient-to-br ${project.gradient} p-3 shadow-lg`}
+                      >
+                        <IconComponent size={24} className="text-white" />
+                      </div>
+                      <h3 className="mt-4 text-xl font-bold text-gray-900 transition-colors group-hover:text-violet-600 dark:text-white dark:group-hover:text-violet-300">
+                        {project.title}
+                      </h3>
+                    </div>
+                    <div className="px-4 pb-4">
+                      <p className="mb-4 line-clamp-3 text-gray-600 dark:text-slate-400">
+                        {project.description}
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {project.tags.slice(0, 4).map((tag) => (
+                          <span
+                            key={tag}
+                            className="rounded-md bg-gray-200 px-2 py-0.5 text-xs text-gray-700 dark:bg-slate-700/50 dark:text-slate-300"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                        {project.tags.length > 4 && (
+                          <span className="rounded-md bg-gray-200 px-2 py-0.5 text-xs text-gray-500 dark:bg-slate-700/50 dark:text-slate-400">
+                            +{project.tags.length - 4}
+                          </span>
+                        )}
                       </div>
                     </div>
                   </div>
-                  <div className="-mt-8 pb-2 px-4 pt-4 relative">
-                    <div
-                      className={`inline-flex rounded-xl bg-gradient-to-br ${project.gradient} p-3 shadow-lg`}
-                    >
-                      <IconComponent size={24} className="text-white" />
-                    </div>
-                    <h3 className="mt-4 text-xl font-bold text-gray-900 transition-colors group-hover:text-violet-600 dark:text-white dark:group-hover:text-violet-300">
-                      {project.title}
-                    </h3>
-                  </div>
-                  <div className="px-4 pb-4">
-                    <p className="mb-4 line-clamp-3 text-gray-600 dark:text-slate-400">
-                      {project.description}
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      {project.tags.slice(0, 4).map((tag) => (
-                        <span
-                          key={tag}
-                          className="rounded-md bg-gray-200 px-2 py-0.5 text-xs text-gray-700 dark:bg-slate-700/50 dark:text-slate-300"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                      {project.tags.length > 4 && (
-                        <span className="rounded-md bg-gray-200 px-2 py-0.5 text-xs text-gray-500 dark:bg-slate-700/50 dark:text-slate-400">
-                          +{project.tags.length - 4}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </div>
+                </Link>
               </motion.div>
             );
           })}
         </motion.div>
       </div>
-
-      <ProjectModal
-        project={selectedProject}
-        isOpen={isProjectModalOpen}
-        onClose={closeModal}
-        IconComponent={
-          selectedProject ? iconMap[selectedProject.icon] : FaRocket
-        }
-      />
     </section>
   );
 }
