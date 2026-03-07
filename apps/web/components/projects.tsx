@@ -69,11 +69,13 @@ export default function Projects() {
                         className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-20`}
                       />
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={project.image}
-                        alt={project.title}
-                        className="h-full w-full object-cover opacity-60 transition-all duration-500 group-hover:scale-105 group-hover:opacity-80"
-                      />
+                      {project.images?.[0] && (
+                        <img
+                          src={project.images[0]}
+                          alt={project.title}
+                          className="h-full w-full object-cover opacity-60 transition-all duration-500 group-hover:scale-105 group-hover:opacity-80"
+                        />
+                      )}
                       <div className="absolute inset-0 bg-gradient-to-t from-white via-white/50 to-transparent dark:from-slate-900 dark:via-slate-900/50 dark:to-transparent" />
                       <div className="absolute right-3 top-3">
                         <span className="rounded-full bg-black/60 px-2 py-1 text-xs text-white backdrop-blur-sm dark:bg-slate-800/80 dark:text-slate-300">

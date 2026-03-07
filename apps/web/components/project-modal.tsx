@@ -69,11 +69,13 @@ export default function ProjectModal({
                 className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-30`}
               />
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={project.image}
-                alt={project.title}
-                className="h-64 w-full object-cover"
-              />
+              {project.images?.[0] && (
+                <img
+                  src={project.images[0]}
+                  alt={project.title}
+                  className="h-64 w-full object-cover"
+                />
+              )}
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent" />
             </div>
 

@@ -29,7 +29,6 @@ const emptyProject = (): Partial<ProjectItem> => ({
   gradient: "from-violet-500 to-purple-600",
   icon: "rocket",
   type: "Project I worked on",
-  image: "",
   logo: "",
   images: [],
   videos: [],

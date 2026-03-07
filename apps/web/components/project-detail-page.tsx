@@ -98,11 +98,13 @@ export default function ProjectDetailPage({ project }: ProjectDetailPageProps) {
               className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-20`}
             />
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={project.image}
-              alt={project.title}
-              className="relative h-56 w-full object-cover sm:h-72 md:h-80"
-            />
+            {project.images?.[0] && (
+              <img
+                src={project.images[0]}
+                alt={project.title}
+                className="relative h-56 w-full object-cover sm:h-72 md:h-80"
+              />
+            )}
             <div className="absolute inset-0 bg-gradient-to-t from-gray-50 via-transparent to-transparent dark:from-gray-900" />
           </motion.div>
 

@@ -26,7 +26,6 @@ export type ProjectItem = {
   gradient?: string;
   icon?: string;
   type?: string;
-  image?: string;
   logo?: string;
   images?: string[];
   videos?: string[];
