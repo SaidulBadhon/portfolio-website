@@ -27,6 +27,9 @@ export type ProjectItem = {
   icon?: string;
   type?: string;
   image?: string;
+  logo?: string;
+  images?: string[];
+  videos?: string[];
   longDescription?: string;
   features?: string[];
   technologies?: string[];

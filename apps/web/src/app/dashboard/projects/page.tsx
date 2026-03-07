@@ -14,30 +14,11 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ProjectFormDialog } from "./_components/project-form-dialog";
 
-const emptyProject = (): Partial<ProjectItem> => ({
-  id: "",
-  title: "",
-  description: "",
-  tags: [],
-  gradient: "from-violet-500 to-purple-600",
-  icon: "rocket",
-  type: "Project I worked on",
-  image: "",
-  longDescription: "",
-  features: [],
-  technologies: [],
-  role: "",
-  duration: "",
-  links: { live: "", github: "" },
-});
-
 export default function DashboardProjectsPage() {
   const [list, setList] = useState<ProjectItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [modal, setModal] = useState<"new" | ProjectItem | null>(null);
-  const [form, setForm] = useState<Partial<ProjectItem>>(emptyProject());
-  const [saving, setSaving] = useState(false);
 
   const load = async () => {
     try {
@@ -56,40 +37,9 @@ export default function DashboardProjectsPage() {
     load();
   }, []);
 
-  const openNew = () => {
-    setForm(emptyProject());
-    setModal("new");
-  };
-  const openEdit = (p: ProjectItem) => {
-    setForm({ ...p });
-    setModal(p);
-  };
-  const closeModal = () => {
-    setModal(null);
-    setForm(emptyProject());
-  };
-
-  const save = async () => {
-    if (!form.id?.trim() || !form.title?.trim() || !form.description?.trim()) {
-      setError("ID, title, and description are required.");
-      return;
-    }
-    setSaving(true);
-    setError("");
-    try {
-      if (modal === "new") {
-        await projectsApi.create(form as ProjectItem);
-      } else {
-        await projectsApi.update((modal as ProjectItem).id, form);
-      }
-      closeModal();
-      load();
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Save failed");
-    } finally {
-      setSaving(false);
-    }
-  };
+  const openNew = () => setModal("new");
+  const openEdit = (p: ProjectItem) => setModal(p);
+  const closeModal = () => setModal(null);
 
   const remove = async (id: string) => {
     if (!confirm("Delete this project?")) return;
@@ -99,19 +49,6 @@ export default function DashboardProjectsPage() {
     } catch (e) {
       setError(e instanceof Error ? e.message : "Delete failed");
     }
-  };
-
-  const update = (key: keyof ProjectItem, value: unknown) => {
-    setForm((prev) => ({ ...prev, [key]: value }));
-  };
-  const updateLinks = (key: "live" | "github", value: string) => {
-    setForm((prev) => ({
-      ...prev,
-      links: { ...prev.links, [key]: value },
-    }));
-  };
-  const updateArray = (key: "tags" | "features" | "technologies", value: string[]) => {
-    setForm((prev) => ({ ...prev, [key]: value }));
   };
 
   if (loading) {
@@ -188,14 +125,9 @@ export default function DashboardProjectsPage() {
 
       <ProjectFormDialog
         open={!!modal}
-        mode={modal}
-        form={form}
-        saving={saving}
+        mode={modal ?? "new"}
         onClose={closeModal}
-        onSave={save}
-        onUpdate={update}
-        onUpdateLinks={updateLinks}
-        onUpdateArray={updateArray}
+        onSuccess={load}
       />
     </div>
   );
