@@ -1,22 +1,18 @@
 import toast from "react-hot-toast";
 
-/** Ensure the file has a name with extension so IPFS gateway can serve correct Content-Type. */
-function fileWithName(file: File): File {
-  if (file.name && file.name.includes(".")) return file;
-  const ext = file.type === "image/png" ? "png" : file.type === "image/jpeg" || file.type === "image/jpg" ? "jpg" : file.type === "image/gif" ? "gif" : file.type === "image/webp" ? "webp" : "png";
-  return new File([file], file.name || `image.${ext}`, { type: file.type });
-}
-
+/**
+ * Upload matches dokan.gg: send the file as the raw request body with Content-Type
+ * set to the file's MIME type so the IPFS gateway can serve the CID with correct type.
+ */
 export async function uploadImageToIPFS({ file }: { file: File }): Promise<string | null> {
-  const formData = new FormData();
-  const named = fileWithName(file);
-  formData.append("file", named, named.name);
-
   try {
     const res = await fetch("https://ipfs.near.social/add", {
       method: "POST",
-      body: formData,
-      headers: { Accept: "application/json" },
+      body: file,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": file.type || "application/octet-stream",
+      },
     });
     if (!res.ok) {
       throw new Error(res.statusText);
