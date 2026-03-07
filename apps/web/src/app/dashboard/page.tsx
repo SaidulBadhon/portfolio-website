@@ -1,35 +1,41 @@
 import Link from "next/link";
 import { FolderGit2, Sparkles, Briefcase } from "lucide-react";
+import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
 export default function DashboardPage() {
   return (
     <div>
-      <h1 className="text-2xl font-semibold text-white mb-2">Overview</h1>
-      <p className="text-slate-400 mb-8">Manage the content that appears on your portfolio.</p>
+      <h1 className="text-2xl font-semibold text-foreground mb-2">Overview</h1>
+      <p className="text-muted-foreground mb-8">
+        Manage the content that appears on your portfolio.
+      </p>
       <div className="grid gap-4 sm:grid-cols-3">
-        <Link
-          href="/dashboard/projects"
-          className="rounded-xl border border-slate-700 bg-slate-800/50 p-6 hover:border-violet-500/50 hover:bg-slate-800 transition-colors"
-        >
-          <FolderGit2 className="text-violet-400 mb-3" size={32} />
-          <h2 className="font-medium text-white">Projects</h2>
-          <p className="text-sm text-slate-400">Add, edit, and remove projects</p>
+        <Link href="/dashboard/projects">
+          <Card className="transition-colors hover:ring-2 hover:ring-primary/50">
+            <CardHeader>
+              <FolderGit2 className="text-primary mb-2 size-8" />
+              <CardTitle>Projects</CardTitle>
+              <CardDescription>Add, edit, and remove projects</CardDescription>
+            </CardHeader>
+          </Card>
         </Link>
-        <Link
-          href="/dashboard/skills"
-          className="rounded-xl border border-slate-700 bg-slate-800/50 p-6 hover:border-violet-500/50 hover:bg-slate-800 transition-colors"
-        >
-          <Sparkles className="text-violet-400 mb-3" size={32} />
-          <h2 className="font-medium text-white">Skills</h2>
-          <p className="text-sm text-slate-400">Manage skills and tags</p>
+        <Link href="/dashboard/skills">
+          <Card className="transition-colors hover:ring-2 hover:ring-primary/50">
+            <CardHeader>
+              <Sparkles className="text-primary mb-2 size-8" />
+              <CardTitle>Skills</CardTitle>
+              <CardDescription>Manage skills and tags</CardDescription>
+            </CardHeader>
+          </Card>
         </Link>
-        <Link
-          href="/dashboard/experience"
-          className="rounded-xl border border-slate-700 bg-slate-800/50 p-6 hover:border-violet-500/50 hover:bg-slate-800 transition-colors"
-        >
-          <Briefcase className="text-violet-400 mb-3" size={32} />
-          <h2 className="font-medium text-white">Experience</h2>
-          <p className="text-sm text-slate-400">Work and education history</p>
+        <Link href="/dashboard/experience">
+          <Card className="transition-colors hover:ring-2 hover:ring-primary/50">
+            <CardHeader>
+              <Briefcase className="text-primary mb-2 size-8" />
+              <CardTitle>Experience</CardTitle>
+              <CardDescription>Work and education history</CardDescription>
+            </CardHeader>
+          </Card>
         </Link>
       </div>
     </div>

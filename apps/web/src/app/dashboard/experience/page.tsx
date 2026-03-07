@@ -3,6 +3,25 @@
 import { useState, useEffect } from "react";
 import { experiencesApi, type ExperienceItem } from "@/lib/api";
 import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardAction,
+} from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const emptyForm = () => ({
   title: "",
@@ -96,150 +115,153 @@ export default function DashboardExperiencePage() {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
 
-  if (loading) return <p className="text-slate-400">Loading…</p>;
+  if (loading) return <p className="text-muted-foreground">Loading…</p>;
 
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-semibold text-white">Experience</h1>
-        <button
-          type="button"
-          onClick={openNew}
-          className="flex items-center gap-2 rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-700"
-        >
-          <Plus size={18} />
+        <h1 className="text-2xl font-semibold text-foreground">Experience</h1>
+        <Button onClick={openNew}>
+          <Plus className="size-4" />
           Add experience
-        </button>
+        </Button>
       </div>
-      {error && <p className="mb-4 text-sm text-red-400">{error}</p>}
+      {error && (
+        <Alert variant="destructive" className="mb-4">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
       <div className="space-y-3">
         {list.length === 0 ? (
-          <p className="rounded-lg border border-slate-700 bg-slate-800/50 p-6 text-slate-400">
-            No experience entries yet. Add one to get started.
-          </p>
+          <Card>
+            <CardContent className="py-6">
+              <p className="text-muted-foreground text-center">
+                No experience entries yet. Add one to get started.
+              </p>
+            </CardContent>
+          </Card>
         ) : (
           list.map((x) => (
-            <div
-              key={x._id}
-              className="flex items-center justify-between rounded-lg border border-slate-700 bg-slate-800/50 p-4"
-            >
-              <div>
-                <span className="font-medium text-white">{x.title}</span>
-                <span className="text-slate-400"> at </span>
-                <span className="font-medium text-white">{x.company}</span>
-                {x.date && <span className="ml-2 text-slate-500 text-sm">{x.date}</span>}
-              </div>
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => openEdit(x)}
-                  className="rounded p-2 text-slate-400 hover:bg-slate-700 hover:text-white"
-                >
-                  <Pencil size={18} />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => remove(x._id)}
-                  className="rounded p-2 text-slate-400 hover:bg-red-500/20 hover:text-red-400"
-                >
-                  <Trash2 size={18} />
-                </button>
-              </div>
-            </div>
+            <Card key={x._id}>
+              <CardHeader className="flex-row items-center">
+                <div className="min-w-0">
+                  <CardTitle className="text-base">
+                    {x.title}
+                    <span className="text-muted-foreground font-normal"> at </span>
+                    {x.company}
+                    {x.date && (
+                      <span className="ml-2 text-muted-foreground text-sm font-normal">
+                        {x.date}
+                      </span>
+                    )}
+                  </CardTitle>
+                </div>
+                <CardAction className="flex items-center gap-1">
+                  <Button
+                    variant="ghost"
+                    size="icon-sm"
+                    onClick={() => openEdit(x)}
+                    aria-label="Edit experience"
+                  >
+                    <Pencil className="size-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon-sm"
+                    onClick={() => remove(x._id)}
+                    className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                    aria-label="Delete experience"
+                  >
+                    <Trash2 className="size-4" />
+                  </Button>
+                </CardAction>
+              </CardHeader>
+            </Card>
           ))
         )}
       </div>
 
-      {modal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-xl border border-slate-700 bg-slate-800 p-6">
-            <h2 className="text-lg font-semibold text-white mb-4">
+      <Dialog open={!!modal} onOpenChange={(open) => !open && closeModal()}>
+        <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>
               {modal === "new" ? "New experience" : "Edit experience"}
-            </h2>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm text-slate-400 mb-1">Job title</label>
-                <input
-                  value={form.title}
-                  onChange={(e) => update("title", e.target.value)}
-                  className="w-full rounded border border-slate-600 bg-slate-900 px-3 py-2 text-white"
-                  placeholder="Full Stack Engineer"
-                />
-              </div>
-              <div>
-                <label className="block text-sm text-slate-400 mb-1">Company</label>
-                <input
-                  value={form.company}
-                  onChange={(e) => update("company", e.target.value)}
-                  className="w-full rounded border border-slate-600 bg-slate-900 px-3 py-2 text-white"
-                />
-              </div>
-              <div>
-                <label className="block text-sm text-slate-400 mb-1">Location</label>
-                <input
-                  value={form.location}
-                  onChange={(e) => update("location", e.target.value)}
-                  className="w-full rounded border border-slate-600 bg-slate-900 px-3 py-2 text-white"
-                  placeholder="San Francisco, CA • Remote"
-                />
-              </div>
-              <div>
-                <label className="block text-sm text-slate-400 mb-1">Date / period</label>
-                <input
-                  value={form.date}
-                  onChange={(e) => update("date", e.target.value)}
-                  className="w-full rounded border border-slate-600 bg-slate-900 px-3 py-2 text-white"
-                  placeholder="Jul 2025 - Present"
-                />
-              </div>
-              <div>
-                <label className="block text-sm text-slate-400 mb-1">Description</label>
-                <textarea
-                  value={form.description}
-                  onChange={(e) => update("description", e.target.value)}
-                  className="w-full rounded border border-slate-600 bg-slate-900 px-3 py-2 text-white"
-                  rows={4}
-                />
-              </div>
-              <div>
-                <label className="block text-sm text-slate-400 mb-1">Company logo path (optional)</label>
-                <input
-                  value={form.companyLogo}
-                  onChange={(e) => update("companyLogo", e.target.value)}
-                  className="w-full rounded border border-slate-600 bg-slate-900 px-3 py-2 text-white"
-                  placeholder="/assets/experience/jutsu.png"
-                />
-              </div>
-              <div>
-                <label className="block text-sm text-slate-400 mb-1">Icon name (optional)</label>
-                <input
-                  value={form.icon}
-                  onChange={(e) => update("icon", e.target.value)}
-                  className="w-full rounded border border-slate-600 bg-slate-900 px-3 py-2 text-white"
-                  placeholder="FaReact"
-                />
-              </div>
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-2">
+              <Label htmlFor="exp-title">Job title</Label>
+              <Input
+                id="exp-title"
+                value={form.title}
+                onChange={(e) => update("title", e.target.value)}
+                placeholder="Full Stack Engineer"
+              />
             </div>
-            <div className="mt-6 flex justify-end gap-2">
-              <button
-                type="button"
-                onClick={closeModal}
-                className="rounded-lg border border-slate-600 px-4 py-2 text-slate-300 hover:bg-slate-700"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={save}
-                disabled={saving}
-                className="rounded-lg bg-violet-600 px-4 py-2 text-white hover:bg-violet-700 disabled:opacity-50"
-              >
-                {saving ? "Saving…" : "Save"}
-              </button>
+            <div className="space-y-2">
+              <Label htmlFor="exp-company">Company</Label>
+              <Input
+                id="exp-company"
+                value={form.company}
+                onChange={(e) => update("company", e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="exp-location">Location</Label>
+              <Input
+                id="exp-location"
+                value={form.location}
+                onChange={(e) => update("location", e.target.value)}
+                placeholder="San Francisco, CA • Remote"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="exp-date">Date / period</Label>
+              <Input
+                id="exp-date"
+                value={form.date}
+                onChange={(e) => update("date", e.target.value)}
+                placeholder="Jul 2025 - Present"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="exp-desc">Description</Label>
+              <Textarea
+                id="exp-desc"
+                value={form.description}
+                onChange={(e) => update("description", e.target.value)}
+                rows={4}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="exp-logo">Company logo path (optional)</Label>
+              <Input
+                id="exp-logo"
+                value={form.companyLogo}
+                onChange={(e) => update("companyLogo", e.target.value)}
+                placeholder="/assets/experience/jutsu.png"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="exp-icon">Icon name (optional)</Label>
+              <Input
+                id="exp-icon"
+                value={form.icon}
+                onChange={(e) => update("icon", e.target.value)}
+                placeholder="FaReact"
+              />
             </div>
           </div>
-        </div>
-      )}
+          <DialogFooter showCloseButton={false}>
+            <Button variant="outline" onClick={closeModal}>
+              Cancel
+            </Button>
+            <Button onClick={save} disabled={saving}>
+              {saving ? "Saving…" : "Save"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -3,6 +3,18 @@
 import { useState, useEffect } from "react";
 import { skillsApi, type SkillItem } from "@/lib/api";
 import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Card, CardContent } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export default function DashboardSkillsPage() {
   const [list, setList] = useState<SkillItem[]>([]);
@@ -77,99 +89,94 @@ export default function DashboardSkillsPage() {
     }
   };
 
-  if (loading) return <p className="text-slate-400">Loading…</p>;
+  if (loading) return <p className="text-muted-foreground">Loading…</p>;
 
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-semibold text-white">Skills</h1>
-        <button
-          type="button"
-          onClick={openNew}
-          className="flex items-center gap-2 rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-700"
-        >
-          <Plus size={18} />
+        <h1 className="text-2xl font-semibold text-foreground">Skills</h1>
+        <Button onClick={openNew}>
+          <Plus className="size-4" />
           Add skill
-        </button>
+        </Button>
       </div>
-      {error && <p className="mb-4 text-sm text-red-400">{error}</p>}
+      {error && (
+        <Alert variant="destructive" className="mb-4">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
       <div className="flex flex-wrap gap-2">
         {list.length === 0 ? (
-          <p className="rounded-lg border border-slate-700 bg-slate-800/50 p-6 text-slate-400">
-            No skills yet. Add one to get started.
-          </p>
+          <Card className="min-w-[200px]">
+            <CardContent className="py-6">
+              <p className="text-muted-foreground text-center">
+                No skills yet. Add one to get started.
+              </p>
+            </CardContent>
+          </Card>
         ) : (
           list.map((s) => (
-            <div
-              key={s._id}
-              className="flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-800/50 px-4 py-2"
-            >
-              <span className="text-white">{s.name}</span>
-              <button
-                type="button"
-                onClick={() => openEdit(s)}
-                className="rounded p-1 text-slate-400 hover:bg-slate-700 hover:text-white"
-              >
-                <Pencil size={14} />
-              </button>
-              <button
-                type="button"
-                onClick={() => remove(s._id)}
-                className="rounded p-1 text-slate-400 hover:bg-red-500/20 hover:text-red-400"
-              >
-                <Trash2 size={14} />
-              </button>
-            </div>
+            <Card key={s._id} className="flex items-center gap-2 px-4 py-2">
+              <span className="font-medium">{s.name}</span>
+              <div className="flex items-center gap-1 ml-auto">
+                <Button
+                  variant="ghost"
+                  size="icon-xs"
+                  onClick={() => openEdit(s)}
+                  aria-label="Edit skill"
+                >
+                  <Pencil className="size-3.5" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon-xs"
+                  onClick={() => remove(s._id)}
+                  className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                  aria-label="Remove skill"
+                >
+                  <Trash2 className="size-3.5" />
+                </Button>
+              </div>
+            </Card>
           ))
         )}
       </div>
 
-      {modal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="w-full max-w-md rounded-xl border border-slate-700 bg-slate-800 p-6">
-            <h2 className="text-lg font-semibold text-white mb-4">
-              {modal === "new" ? "New skill" : "Edit skill"}
-            </h2>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm text-slate-400 mb-1">Name</label>
-                <input
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full rounded border border-slate-600 bg-slate-900 px-3 py-2 text-white"
-                  placeholder="e.g. TypeScript"
-                />
-              </div>
-              <div>
-                <label className="block text-sm text-slate-400 mb-1">Color (Tailwind class, optional)</label>
-                <input
-                  value={color}
-                  onChange={(e) => setColor(e.target.value)}
-                  className="w-full rounded border border-slate-600 bg-slate-900 px-3 py-2 text-white"
-                  placeholder="bg-blue-500/10 text-blue-600"
-                />
-              </div>
+      <Dialog open={!!modal} onOpenChange={(open) => !open && closeModal()}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>{modal === "new" ? "New skill" : "Edit skill"}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-2">
+              <Label htmlFor="skill-name">Name</Label>
+              <Input
+                id="skill-name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="e.g. TypeScript"
+              />
             </div>
-            <div className="mt-6 flex justify-end gap-2">
-              <button
-                type="button"
-                onClick={closeModal}
-                className="rounded-lg border border-slate-600 px-4 py-2 text-slate-300 hover:bg-slate-700"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={save}
-                disabled={saving}
-                className="rounded-lg bg-violet-600 px-4 py-2 text-white hover:bg-violet-700 disabled:opacity-50"
-              >
-                {saving ? "Saving…" : "Save"}
-              </button>
+            <div className="space-y-2">
+              <Label htmlFor="skill-color">Color (Tailwind class, optional)</Label>
+              <Input
+                id="skill-color"
+                value={color}
+                onChange={(e) => setColor(e.target.value)}
+                placeholder="bg-blue-500/10 text-blue-600"
+              />
             </div>
           </div>
-        </div>
-      )}
+          <DialogFooter showCloseButton={false}>
+            <Button variant="outline" onClick={closeModal}>
+              Cancel
+            </Button>
+            <Button onClick={save} disabled={saving}>
+              {saving ? "Saving…" : "Save"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

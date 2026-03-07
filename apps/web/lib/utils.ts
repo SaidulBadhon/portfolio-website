@@ -1,26 +1,16 @@
-export const validateString = (
-  value: unknown,
-  maxLength: number
-): value is string => {
-  if (!value || typeof value !== "string" || value.length > maxLength) {
-    return false;
-  }
+import { clsx, type ClassValue } from "clsx"
+import { twMerge } from "tailwind-merge"
 
-  return true;
-};
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
 
-export const getErrorMessage = (error: unknown): string => {
-  let message: string;
+export function validateString(value: unknown, maxLength: number): value is string {
+  return typeof value === "string" && value.length > 0 && value.length <= maxLength
+}
 
-  if (error instanceof Error) {
-    message = error.message;
-  } else if (error && typeof error === "object" && "message" in error) {
-    message = String(error.message);
-  } else if (typeof error === "string") {
-    message = error;
-  } else {
-    message = "Something went wrong";
-  }
-
-  return message;
-};
+export function getErrorMessage(error: unknown): string {
+  if (error instanceof Error) return error.message
+  if (typeof error === "string") return error
+  return "An unknown error occurred"
+}
