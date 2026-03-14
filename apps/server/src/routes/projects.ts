@@ -3,6 +3,15 @@ import { Project } from "../models/Project.js";
 
 export const projects = new Hono();
 
+const isDuplicateKeyError = (error: unknown): boolean => {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error &&
+    (error as { code?: number }).code === 11000
+  );
+};
+
 projects.get("/", async (c) => {
   const list = await Project.find().sort({ createdAt: -1 }).lean();
   return c.json(list);
@@ -15,9 +24,16 @@ projects.get("/:id", async (c) => {
 });
 
 projects.post("/", async (c) => {
-  const body = await c.req.json();
-  const doc = await Project.create(body);
-  return c.json(doc, 201);
+  try {
+    const body = await c.req.json();
+    const doc = await Project.create(body);
+    return c.json(doc, 201);
+  } catch (error) {
+    if (isDuplicateKeyError(error)) {
+      return c.json({ error: "Project ID already exists." }, 409);
+    }
+    throw error;
+  }
 });
 
 projects.put("/:id", async (c) => {
