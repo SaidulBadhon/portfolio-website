@@ -2,7 +2,7 @@
 
 import type { ProjectItem } from "@/lib/api";
 import { Pencil, Trash2, ExternalLink, Github } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -10,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 type ProjectCardProps = {
   project: ProjectItem;
@@ -73,28 +74,26 @@ export function ProjectCard({ project, onEdit, onDelete }: ProjectCardProps) {
       <CardFooter className="flex flex-wrap items-center justify-between gap-2 border-t pt-3">
         <div className="flex items-center gap-1">
           {project.links?.live && (
-            <Button variant="ghost" size="icon-sm" asChild>
-              <a
-                href={project.links.live}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Open live site"
-              >
-                <ExternalLink className="size-4" />
-              </a>
-            </Button>
+            <a
+              href={project.links.live}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Open live site"
+              className={cn(buttonVariants({ variant: "ghost", size: "icon-sm" }))}
+            >
+              <ExternalLink className="size-4" />
+            </a>
           )}
           {project.links?.github && (
-            <Button variant="ghost" size="icon-sm" asChild>
-              <a
-                href={project.links.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Open GitHub"
-              >
-                <Github className="size-4" />
-              </a>
-            </Button>
+            <a
+              href={project.links.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Open GitHub"
+              className={cn(buttonVariants({ variant: "ghost", size: "icon-sm" }))}
+            >
+              <Github className="size-4" />
+            </a>
           )}
         </div>
         <div className="flex items-center gap-1">

@@ -2,9 +2,9 @@
 
 import React from "react";
 import SectionHeading from "./section-heading";
-import { skillsData } from "@/lib/data";
 import { useSectionInView } from "@/lib/hooks";
 import { motion } from "framer-motion";
+import type { SkillItem } from "@/lib/api";
 
 const fadeInAnimationVariants = {
   initial: {
@@ -20,7 +20,11 @@ const fadeInAnimationVariants = {
   }),
 };
 
-export default function Skills() {
+type SkillsProps = {
+  skills: SkillItem[];
+};
+
+export default function Skills({ skills }: SkillsProps) {
   const { ref } = useSectionInView("Skills");
 
   return (
@@ -31,10 +35,10 @@ export default function Skills() {
     >
       <SectionHeading>My skills</SectionHeading>
       <ul className="flex flex-wrap justify-center gap-2 text-lg text-gray-800">
-        {skillsData.map((skill, index) => (
+        {skills.map((skill, index) => (
           <motion.li
             className="bg-white borderBlack rounded-xl px-5 py-3 dark:bg-white/10 dark:text-white/80"
-            key={index}
+            key={skill._id ?? `${skill.name}-${index}`}
             variants={fadeInAnimationVariants}
             initial="initial"
             whileInView="animate"
@@ -43,7 +47,7 @@ export default function Skills() {
             }}
             custom={index}
           >
-            {skill}
+            {skill.name}
           </motion.li>
         ))}
       </ul>

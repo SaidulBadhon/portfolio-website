@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import type { ProjectCardItem } from "@/lib/data/projectsCardData";
+import type { ProjectItem } from "@/lib/api";
 import {
   FaUser,
   FaCalendar,
@@ -15,7 +15,7 @@ import {
 } from "react-icons/fa";
 
 type ProjectModalProps = {
-  project: ProjectCardItem | null;
+  project: ProjectItem | null;
   isOpen: boolean;
   onClose: () => void;
   IconComponent: React.ComponentType<{ size?: number; className?: string }>;
@@ -69,9 +69,9 @@ export default function ProjectModal({
                 className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-30`}
               />
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              {project.images?.[0] && (
+              {(project.images?.[0] || project.logo) && (
                 <img
-                  src={project.images[0]}
+                  src={project.images?.[0] ?? project.logo}
                   alt={project.title}
                   className="h-64 w-full object-cover"
                 />
@@ -111,7 +111,7 @@ export default function ProjectModal({
                 Overview
               </h3>
               <p className="leading-relaxed text-slate-300">
-                {project.longDescription}
+                {project.longDescription ?? project.description}
               </p>
             </div>
 
@@ -122,7 +122,7 @@ export default function ProjectModal({
                 Key Features
               </h3>
               <ul className="grid grid-cols-1 gap-2 md:grid-cols-2">
-                {project.features.map((feature, index) => (
+                {(project.features ?? []).map((feature, index) => (
                   <motion.li
                     key={index}
                     initial={{ opacity: 0, x: -10 }}
@@ -146,7 +146,7 @@ export default function ProjectModal({
                 Technologies Used
               </h3>
               <div className="flex flex-wrap gap-2">
-                {project.technologies.map((tech) => (
+                {(project.technologies ?? project.tags).map((tech) => (
                   <span
                     key={tech}
                     className="rounded-md border border-white/10 bg-slate-700/30 px-3 py-1.5 text-slate-200"
@@ -160,7 +160,7 @@ export default function ProjectModal({
             {/* Links */}
             <div className="flex flex-wrap gap-3 border-t border-white/10 pt-4">
               <motion.a
-                href={project.links.live}
+                href={project.links?.live || "#"}
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.05 }}
@@ -171,7 +171,7 @@ export default function ProjectModal({
                 View Live
               </motion.a>
               <motion.a
-                href={project.links.github}
+                href={project.links?.github || "#"}
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.05 }}

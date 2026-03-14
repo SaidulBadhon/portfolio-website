@@ -7,11 +7,15 @@ import {
   VerticalTimelineElement,
 } from "react-vertical-timeline-component";
 import "react-vertical-timeline-component/style.min.css";
-import { experiencesData } from "@/lib/data";
 import { useSectionInView } from "@/lib/hooks";
 import { useTheme } from "@/context/theme-context";
+import type { ExperienceItem } from "@/lib/api";
 
-export default function Experience() {
+type ExperienceProps = {
+  experiences: ExperienceItem[];
+};
+
+export default function Experience({ experiences }: ExperienceProps) {
   const { ref } = useSectionInView("Experience");
   const { theme } = useTheme();
 
@@ -19,8 +23,8 @@ export default function Experience() {
     <section id="experience" ref={ref} className="scroll-mt-28 mb-28 sm:mb-40">
       <SectionHeading>My experience</SectionHeading>
       <VerticalTimeline lineColor="">
-        {experiencesData.map((item, index) => (
-          <React.Fragment key={index}>
+        {experiences.map((item, index) => (
+          <React.Fragment key={item._id ?? `${item.title}-${index}`}>
             <VerticalTimelineElement
               contentStyle={{
                 background:
@@ -36,25 +40,31 @@ export default function Experience() {
                     ? "0.4rem solid #9ca3af"
                     : "0.4rem solid rgba(255, 255, 255, 0.5)",
               }}
-              date={item.date}
+              date={item.date ?? ""}
               icon={
-                <img
-                  src={item.companyLogo}
-                  alt={`${item.company} logo`}
-                  className="w-full h-full rounded-full object-cover"
-                  onError={(e) => {
-                    e.currentTarget.style.display = "none";
-                    const parent = e.currentTarget.parentElement;
-                    if (parent) {
-                      parent.innerHTML = item.company.charAt(0);
-                      parent.style.display = "flex";
-                      parent.style.alignItems = "center";
-                      parent.style.justifyContent = "center";
-                      parent.style.fontSize = "1.5rem";
-                      parent.style.fontWeight = "bold";
-                    }
-                  }}
-                />
+                item.companyLogo ? (
+                  <img
+                    src={item.companyLogo}
+                    alt={`${item.company} logo`}
+                    className="w-full h-full rounded-full object-cover"
+                    onError={(e) => {
+                      e.currentTarget.style.display = "none";
+                      const parent = e.currentTarget.parentElement;
+                      if (parent) {
+                        parent.innerHTML = item.company.charAt(0);
+                        parent.style.display = "flex";
+                        parent.style.alignItems = "center";
+                        parent.style.justifyContent = "center";
+                        parent.style.fontSize = "1.5rem";
+                        parent.style.fontWeight = "bold";
+                      }
+                    }}
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center text-xl font-bold">
+                    {item.company.charAt(0)}
+                  </div>
+                )
               }
               iconStyle={{
                 background:
@@ -73,7 +83,7 @@ export default function Experience() {
                 <span className="px-2">•</span>
 
                 <span className="!mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">
-                  {item.location}
+                  {item.location ?? "Remote"}
                 </span>
               </p>
               {/* <p className="!mt-1 text-base font-semibold text-gray-800 dark:text-gray-300">
@@ -83,7 +93,7 @@ export default function Experience() {
                 {item.location}
               </p> */}
               <p className="!mt-2 text-xs leading-relaxed text-gray-700 dark:text-white/75">
-                {item.description}
+                {item.description ?? ""}
               </p>
             </VerticalTimelineElement>
           </React.Fragment>

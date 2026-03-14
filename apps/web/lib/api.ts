@@ -1,5 +1,7 @@
 const getBaseUrl = () =>
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+  process.env.API_URL ||
+  process.env.NEXT_PUBLIC_API_URL ||
+  "http://localhost:4000";
 
 export async function apiFetch<T>(
   path: string,
@@ -38,8 +40,9 @@ export type ProjectItem = {
 };
 
 export const projectsApi = {
-  list: () => apiFetch<ProjectItem[]>("/api/projects"),
-  get: (id: string) => apiFetch<ProjectItem>(`/api/projects/${id}`),
+  list: (options?: RequestInit) => apiFetch<ProjectItem[]>("/api/projects", options),
+  get: (id: string, options?: RequestInit) =>
+    apiFetch<ProjectItem>(`/api/projects/${id}`, options),
   create: (body: Partial<ProjectItem>) =>
     apiFetch<ProjectItem>("/api/projects", { method: "POST", body: JSON.stringify(body) }),
   update: (id: string, body: Partial<ProjectItem>) =>
@@ -52,7 +55,7 @@ export const projectsApi = {
 export type SkillItem = { _id: string; name: string; color?: string };
 
 export const skillsApi = {
-  list: () => apiFetch<SkillItem[]>("/api/skills"),
+  list: (options?: RequestInit) => apiFetch<SkillItem[]>("/api/skills", options),
   create: (body: { name: string; color?: string }) =>
     apiFetch<SkillItem>("/api/skills", { method: "POST", body: JSON.stringify(body) }),
   update: (id: string, body: { name: string; color?: string }) =>
@@ -74,7 +77,7 @@ export type ExperienceItem = {
 };
 
 export const experiencesApi = {
-  list: () => apiFetch<ExperienceItem[]>("/api/experiences"),
+  list: (options?: RequestInit) => apiFetch<ExperienceItem[]>("/api/experiences", options),
   create: (body: Omit<ExperienceItem, "_id">) =>
     apiFetch<ExperienceItem>("/api/experiences", { method: "POST", body: JSON.stringify(body) }),
   update: (id: string, body: Partial<Omit<ExperienceItem, "_id">>) =>
@@ -98,7 +101,7 @@ export const contactApi = {
       method: "POST",
       body: JSON.stringify(body),
     }),
-  list: () => apiFetch<ContactMessageItem[]>("/api/contact"),
+  list: (options?: RequestInit) => apiFetch<ContactMessageItem[]>("/api/contact", options),
   delete: (id: string) =>
     apiFetch<{ ok: boolean }>(`/api/contact/${id}`, { method: "DELETE" }),
 };
