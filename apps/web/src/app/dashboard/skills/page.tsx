@@ -105,9 +105,9 @@ export default function DashboardSkillsPage() {
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
-      <div className="flex flex-wrap gap-2">
+      <div className="space-y-3">
         {list.length === 0 ? (
-          <Card className="min-w-[200px]">
+          <Card>
             <CardContent className="py-6">
               <p className="text-muted-foreground text-center">
                 No skills yet. Add one to get started.
@@ -115,30 +115,58 @@ export default function DashboardSkillsPage() {
             </CardContent>
           </Card>
         ) : (
-          list.map((s) => (
-            <Card key={s._id} className="flex items-center gap-2 px-4 py-2">
-              <span className="font-medium">{s.name}</span>
-              <div className="flex items-center gap-1 ml-auto">
-                <Button
-                  variant="ghost"
-                  size="icon-xs"
-                  onClick={() => openEdit(s)}
-                  aria-label="Edit skill"
-                >
-                  <Pencil className="size-3.5" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon-xs"
-                  onClick={() => remove(s._id)}
-                  className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                  aria-label="Remove skill"
-                >
-                  <Trash2 className="size-3.5" />
-                </Button>
+          <Card>
+            <CardContent className="p-0">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b bg-muted/30">
+                      <th className="px-4 py-3 text-left font-medium text-muted-foreground">
+                        Skill
+                      </th>
+                      <th className="px-4 py-3 text-left font-medium text-muted-foreground">
+                        Color
+                      </th>
+                      <th className="px-4 py-3 text-right font-medium text-muted-foreground">
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {list.map((s) => (
+                      <tr key={s._id} className="border-b last:border-b-0">
+                        <td className="px-4 py-3 font-medium">{s.name}</td>
+                        <td className="px-4 py-3 text-muted-foreground">
+                          {s.color || "-"}
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="flex items-center justify-end gap-1">
+                            <Button
+                              variant="ghost"
+                              size="icon-xs"
+                              onClick={() => openEdit(s)}
+                              aria-label="Edit skill"
+                            >
+                              <Pencil className="size-3.5" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon-xs"
+                              onClick={() => remove(s._id)}
+                              className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                              aria-label="Remove skill"
+                            >
+                              <Trash2 className="size-3.5" />
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
-            </Card>
-          ))
+            </CardContent>
+          </Card>
         )}
       </div>
 

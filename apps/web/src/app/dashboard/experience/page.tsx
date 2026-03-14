@@ -17,9 +17,6 @@ import {
 import {
   Card,
   CardContent,
-  CardHeader,
-  CardTitle,
-  CardAction,
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
@@ -141,43 +138,68 @@ export default function DashboardExperiencePage() {
             </CardContent>
           </Card>
         ) : (
-          list.map((x) => (
-            <Card key={x._id}>
-              <CardHeader className="flex-row items-center">
-                <div className="min-w-0">
-                  <CardTitle className="text-base">
-                    {x.title}
-                    <span className="text-muted-foreground font-normal"> at </span>
-                    {x.company}
-                    {x.date && (
-                      <span className="ml-2 text-muted-foreground text-sm font-normal">
-                        {x.date}
-                      </span>
-                    )}
-                  </CardTitle>
-                </div>
-                <CardAction className="flex items-center gap-1">
-                  <Button
-                    variant="ghost"
-                    size="icon-sm"
-                    onClick={() => openEdit(x)}
-                    aria-label="Edit experience"
-                  >
-                    <Pencil className="size-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon-sm"
-                    onClick={() => remove(x._id)}
-                    className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                    aria-label="Delete experience"
-                  >
-                    <Trash2 className="size-4" />
-                  </Button>
-                </CardAction>
-              </CardHeader>
-            </Card>
-          ))
+          <Card>
+            <CardContent className="p-0">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b bg-muted/30">
+                      <th className="px-4 py-3 text-left font-medium text-muted-foreground">
+                        Role
+                      </th>
+                      <th className="px-4 py-3 text-left font-medium text-muted-foreground">
+                        Company
+                      </th>
+                      <th className="px-4 py-3 text-left font-medium text-muted-foreground">
+                        Location
+                      </th>
+                      <th className="px-4 py-3 text-left font-medium text-muted-foreground">
+                        Date
+                      </th>
+                      <th className="px-4 py-3 text-right font-medium text-muted-foreground">
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {list.map((x) => (
+                      <tr key={x._id} className="border-b last:border-b-0">
+                        <td className="px-4 py-3 font-medium">{x.title}</td>
+                        <td className="px-4 py-3">{x.company}</td>
+                        <td className="px-4 py-3 text-muted-foreground">
+                          {x.location || "-"}
+                        </td>
+                        <td className="px-4 py-3 text-muted-foreground">
+                          {x.date || "-"}
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="flex items-center justify-end gap-1">
+                            <Button
+                              variant="ghost"
+                              size="icon-sm"
+                              onClick={() => openEdit(x)}
+                              aria-label="Edit experience"
+                            >
+                              <Pencil className="size-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon-sm"
+                              onClick={() => remove(x._id)}
+                              className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                              aria-label="Delete experience"
+                            >
+                              <Trash2 className="size-4" />
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
         )}
       </div>
 

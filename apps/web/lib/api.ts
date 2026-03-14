@@ -82,3 +82,23 @@ export const experiencesApi = {
   delete: (id: string) =>
     apiFetch<{ ok: boolean }>(`/api/experiences/${id}`, { method: "DELETE" }),
 };
+
+// Contact
+export type ContactMessageItem = {
+  _id: string;
+  senderEmail: string;
+  message: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export const contactApi = {
+  submit: (body: { senderEmail: string; message: string }) =>
+    apiFetch<{ ok: boolean; id: string }>("/api/contact", {
+      method: "POST",
+      body: JSON.stringify(body),
+    }),
+  list: () => apiFetch<ContactMessageItem[]>("/api/contact"),
+  delete: (id: string) =>
+    apiFetch<{ ok: boolean }>(`/api/contact/${id}`, { method: "DELETE" }),
+};

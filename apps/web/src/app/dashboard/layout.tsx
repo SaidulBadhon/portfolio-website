@@ -2,7 +2,14 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, FolderGit2, Sparkles, Briefcase, LogOut } from "lucide-react";
+import {
+  LayoutDashboard,
+  FolderGit2,
+  Sparkles,
+  Briefcase,
+  Mail,
+  LogOut,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -12,6 +19,7 @@ const nav = [
   { href: "/dashboard/projects", label: "Projects", icon: FolderGit2 },
   { href: "/dashboard/skills", label: "Skills", icon: Sparkles },
   { href: "/dashboard/experience", label: "Experience", icon: Briefcase },
+  { href: "/dashboard/messages", label: "Messages", icon: Mail },
 ];
 
 export default function DashboardLayout({
