@@ -1,7 +1,8 @@
 "use client";
 
 import type { ProjectItem } from "@/lib/api";
-import { Pencil, Trash2, ExternalLink, Github } from "lucide-react";
+import { Pencil, Trash2, ExternalLink } from "lucide-react";
+import { FaGithub } from "react-icons/fa";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
@@ -20,23 +21,22 @@ type ProjectCardProps = {
 
 export function ProjectCard({ project, onEdit, onDelete }: ProjectCardProps) {
   const coverSrc = project.images?.[0];
-  const gradient = project.gradient ?? "linear-gradient(135deg, hsl(var(--muted)) 0%, hsl(var(--muted) / 0.7) 100%)";
+  // `gradient` holds Tailwind gradient stop classes, e.g. "from-violet-500 to-purple-600".
+  const gradient = project.gradient || "from-violet-500 to-purple-600";
 
   return (
     <Card className="flex flex-col overflow-hidden transition-shadow hover:shadow-md">
       {/* Cover image or gradient */}
       <div className="relative aspect-video w-full shrink-0 overflow-hidden bg-muted">
         {coverSrc ? (
+          // eslint-disable-next-line @next/next/no-img-element -- image URLs come from the CMS
           <img
             src={coverSrc}
             alt=""
             className="h-full w-full object-cover"
           />
         ) : (
-          <div
-            className="h-full w-full"
-            style={{ background: gradient }}
-          />
+          <div className={cn("h-full w-full bg-linear-to-br", gradient)} />
         )}
       </div>
 
@@ -92,7 +92,7 @@ export function ProjectCard({ project, onEdit, onDelete }: ProjectCardProps) {
               aria-label="Open GitHub"
               className={cn(buttonVariants({ variant: "ghost", size: "icon-sm" }))}
             >
-              <Github className="size-4" />
+              <FaGithub className="size-4" />
             </a>
           )}
         </div>

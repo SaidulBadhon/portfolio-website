@@ -14,10 +14,21 @@ type ApiError = {
 };
 
 const apiBase = (
-  process.env.NEXT_PUBLIC_API_URL ??
   process.env.API_URL ??
+  process.env.NEXT_PUBLIC_API_URL ??
   "http://localhost:4000"
 ).replace(/\/$/, "");
+
+const apiSecret = process.env.API_SECRET;
+if (!apiSecret) {
+  console.error("API_SECRET is required (it must match the API server's API_SECRET).");
+  process.exit(1);
+}
+
+const writeHeaders = {
+  "Content-Type": "application/json",
+  Authorization: `Bearer ${apiSecret}`,
+};
 
 const endpoint = `${apiBase}/api/skills`;
 
@@ -37,7 +48,7 @@ const listSkills = async () => {
 const createSkill = async (payload: SkillPayload) => {
   return fetch(endpoint, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: writeHeaders,
     body: JSON.stringify(payload),
   });
 };
@@ -45,7 +56,7 @@ const createSkill = async (payload: SkillPayload) => {
 const updateSkill = async (id: string, payload: SkillPayload) => {
   return fetch(`${endpoint}/${encodeURIComponent(id)}`, {
     method: "PUT",
-    headers: { "Content-Type": "application/json" },
+    headers: writeHeaders,
     body: JSON.stringify(payload),
   });
 };
@@ -60,7 +71,8 @@ const run = async () => {
   let updated = 0;
   let failed = 0;
 
-  for (const name of skillsData) {
+  // Insert oldest-first: the API lists newest first, so the site shows this file's order.
+  for (const name of [...skillsData].reverse()) {
     const payload: SkillPayload = { name };
     const match = byName.get(name.toLowerCase());
 

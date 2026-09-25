@@ -1,7 +1,8 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   FolderGit2,
@@ -10,9 +11,9 @@ import {
   Mail,
   LogOut,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { logout } from "./actions";
 
 const nav = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
@@ -28,7 +29,17 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const router = useRouter();
+
+  // The dashboard is always dark. Dialogs render in a portal on <body>, outside
+  // this layout, so the class has to be on <html> for them to be dark too.
+  useEffect(() => {
+    const root = document.documentElement;
+    const wasDark = root.classList.contains("dark");
+    root.classList.add("dark");
+    return () => {
+      if (!wasDark) root.classList.remove("dark");
+    };
+  }, []);
 
   if (pathname === "/dashboard/login") {
     return (
@@ -37,12 +48,6 @@ export default function DashboardLayout({
       </div>
     );
   }
-
-  const handleLogout = async () => {
-    await fetch("/api/auth/logout", { method: "POST" });
-    router.push("/dashboard/login");
-    router.refresh();
-  };
 
   return (
     <div className="dark min-h-screen bg-slate-900 flex">
@@ -76,7 +81,7 @@ export default function DashboardLayout({
           <Button
             variant="ghost"
             className="w-full justify-start gap-2 text-muted-foreground hover:text-foreground"
-            onClick={handleLogout}
+            onClick={() => logout()}
           >
             <LogOut className="size-4" />
             Log out

@@ -2,13 +2,17 @@
   "name": "portfolio-monorepo",
   "version": "0.1.0",
   "private": true,
-  "workspaces": ["apps/*"],
+  "workspaces": [
+    "apps/*"
+  ],
   "scripts": {
     "dev": "bun run --filter portfolio dev",
     "dev:server": "bun run --filter server dev",
     "dev:all": "bun run dev:server & bun run dev",
     "build": "bun run --filter portfolio build",
     "build:server": "bun run --filter server build",
-    "start": "bun run --filter portfolio start"
+    "start": "bun run --filter portfolio start",
+    "lint": "bun run --filter portfolio lint",
+    "typecheck": "bun run --filter '*' typecheck"
   }
 }

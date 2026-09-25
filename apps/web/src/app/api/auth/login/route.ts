@@ -1,26 +1,32 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
+import {
+  SESSION_COOKIE,
+  SESSION_MAX_AGE,
+  createSessionToken,
+  isDashboardConfigured,
+  verifyPassword,
+} from "@/lib/session";
 
-const COOKIE_NAME = "dashboard_auth";
-const MAX_AGE = 60 * 60 * 24 * 7; // 7 days
-
-export async function POST(req: NextRequest) {
-  const { password } = await req.json();
-  const expected = process.env.DASHBOARD_PASSWORD;
-  if (!expected) {
+export async function POST(req: Request) {
+  if (!isDashboardConfigured()) {
     return NextResponse.json(
-      { error: "Dashboard not configured" },
+      { error: "Dashboard not configured: set DASHBOARD_PASSWORD and API_SECRET." },
       { status: 500 }
     );
   }
-  if (password !== expected) {
+
+  const body = await req.json().catch(() => null);
+  const password = (body as { password?: unknown } | null)?.password;
+  if (!verifyPassword(password)) {
     return NextResponse.json({ error: "Invalid password" }, { status: 401 });
   }
+
   const res = NextResponse.json({ ok: true });
-  res.cookies.set(COOKIE_NAME, "1", {
+  res.cookies.set(SESSION_COOKIE, createSessionToken(), {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
-    maxAge: MAX_AGE,
+    maxAge: SESSION_MAX_AGE,
     path: "/",
   });
   return res;

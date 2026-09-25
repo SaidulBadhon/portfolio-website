@@ -23,10 +23,21 @@ type ApiError = {
 };
 
 const apiBase = (
-  process.env.NEXT_PUBLIC_API_URL ??
   process.env.API_URL ??
+  process.env.NEXT_PUBLIC_API_URL ??
   "http://localhost:4000"
 ).replace(/\/$/, "");
+
+const apiSecret = process.env.API_SECRET;
+if (!apiSecret) {
+  console.error("API_SECRET is required (it must match the API server's API_SECRET).");
+  process.exit(1);
+}
+
+const writeHeaders = {
+  "Content-Type": "application/json",
+  Authorization: `Bearer ${apiSecret}`,
+};
 
 const projectsEndpoint = `${apiBase}/api/projects`;
 
@@ -51,7 +62,7 @@ const readErrorMessage = async (res: Response) => {
 const createProject = async (payload: UploadableProject) => {
   return fetch(projectsEndpoint, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: writeHeaders,
     body: JSON.stringify(payload),
   });
 };
@@ -59,7 +70,7 @@ const createProject = async (payload: UploadableProject) => {
 const updateProject = async (id: string, payload: UploadableProject) => {
   return fetch(`${projectsEndpoint}/${encodeURIComponent(id)}`, {
     method: "PUT",
-    headers: { "Content-Type": "application/json" },
+    headers: writeHeaders,
     body: JSON.stringify(payload),
   });
 };
@@ -71,7 +82,8 @@ const run = async () => {
   let updated = 0;
   let failed = 0;
 
-  for (const project of projectsCardData) {
+  // Insert oldest-first: the API lists newest first, so the site shows this file's order.
+  for (const project of [...projectsCardData].reverse()) {
     const payload = toPayload(project);
     const createRes = await createProject(payload);
 

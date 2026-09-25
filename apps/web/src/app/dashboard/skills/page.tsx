@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { skillsApi, type SkillItem } from "@/lib/api";
+import { useCallback, useEffect, useState } from "react";
+import { adminApi, type SkillItem } from "@/lib/api";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,22 +25,22 @@ export default function DashboardSkillsPage() {
   const [color, setColor] = useState("");
   const [saving, setSaving] = useState(false);
 
-  const load = async () => {
-    try {
-      setLoading(true);
-      const data = await skillsApi.list();
-      setList(data);
-      setError("");
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to load");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const load = useCallback(
+    () =>
+      adminApi.skills
+        .list()
+        .then((data) => {
+          setList(data);
+          setError("");
+        })
+        .catch((e) => setError(e instanceof Error ? e.message : "Failed to load"))
+        .finally(() => setLoading(false)),
+    []
+  );
 
   useEffect(() => {
     load();
-  }, []);
+  }, [load]);
 
   const openNew = () => {
     setName("");
@@ -63,9 +63,9 @@ export default function DashboardSkillsPage() {
     setError("");
     try {
       if (modal === "new") {
-        await skillsApi.create({ name: name.trim(), color: color.trim() || undefined });
+        await adminApi.skills.create({ name: name.trim(), color: color.trim() || undefined });
       } else {
-        await skillsApi.update((modal as SkillItem)._id, {
+        await adminApi.skills.update((modal as SkillItem)._id, {
           name: name.trim(),
           color: color.trim() || undefined,
         });
@@ -82,7 +82,7 @@ export default function DashboardSkillsPage() {
   const remove = async (id: string) => {
     if (!confirm("Remove this skill?")) return;
     try {
-      await skillsApi.delete(id);
+      await adminApi.skills.delete(id);
       load();
     } catch (e) {
       setError(e instanceof Error ? e.message : "Delete failed");

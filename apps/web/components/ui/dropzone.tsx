@@ -49,7 +49,8 @@ export function Dropzone({
     return Array.isArray(value) ? value : [value];
   }, [value]);
 
-  // Create object URLs for image/video previews and revoke on cleanup
+  // Object URLs are an external resource: create them for image/video previews
+  // here and revoke them in the cleanup.
   React.useEffect(() => {
     const urls = new Map<File, string>();
     files.forEach((file) => {
@@ -57,10 +58,8 @@ export function Dropzone({
         urls.set(file, URL.createObjectURL(file));
       }
     });
-    setPreviewUrls((prev) => {
-      prev.forEach((url) => URL.revokeObjectURL(url));
-      return urls;
-    });
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- the URLs only exist once created above
+    setPreviewUrls(urls);
     return () => {
       urls.forEach((url) => URL.revokeObjectURL(url));
     };
@@ -154,6 +153,7 @@ export function Dropzone({
           key={`${file.name}-${index}`}
           className="relative group rounded-lg border border-input bg-muted/50 overflow-hidden aspect-square w-20 h-20 shrink-0"
         >
+          {/* eslint-disable-next-line @next/next/no-img-element -- local blob: preview */}
           <img
             src={previewUrl}
             alt={file.name}
@@ -303,7 +303,7 @@ export function Dropzone({
         onClick={() => inputRef.current?.click()}
         className={cn(
           "flex min-h-[120px] flex-col items-center justify-center rounded-lg border border-dashed border-input bg-muted/30 px-4 py-6 text-center transition-colors",
-          "hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+          "hover:bg-muted/50 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
           isDragActive && "border-primary bg-muted/60",
           disabled && "pointer-events-none opacity-50",
           error && "border-destructive"
@@ -335,6 +335,7 @@ export function Dropzone({
         <div className="flex flex-wrap items-end gap-3">
           {existingUrl && !files.length && (
             <div className="relative group rounded-lg border border-input bg-muted/50 overflow-hidden aspect-square w-20 h-20 shrink-0">
+              {/* eslint-disable-next-line @next/next/no-img-element -- image URLs come from the CMS */}
               <img
                 src={existingUrl}
                 alt="Current"

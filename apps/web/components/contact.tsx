@@ -2,7 +2,7 @@
 
 import React from "react";
 import SectionHeading from "./section-heading";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { useSectionInView } from "@/lib/hooks";
 import { contactApi } from "@/lib/api";
 import SubmitBtn from "./submit-btn";
@@ -10,7 +10,27 @@ import toast from "react-hot-toast";
 
 export default function Contact() {
   const { ref } = useSectionInView("Contact");
-  const formRef = React.useRef<HTMLFormElement>(null);
+  const [isPending, startTransition] = React.useTransition();
+
+  // Handled in onSubmit rather than a form action: React resets a form after
+  // its action finishes, which would wipe the message when sending fails.
+  const handleSubmit = (event: React.SubmitEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const senderEmail = String(formData.get("senderEmail") ?? "");
+    const message = String(formData.get("message") ?? "");
+
+    startTransition(async () => {
+      try {
+        await contactApi.submit({ senderEmail, message });
+        toast.success("Message sent successfully!");
+        form.reset();
+      } catch (error) {
+        toast.error(error instanceof Error ? error.message : "Failed to send message.");
+      }
+    });
+  };
 
   return (
     <motion.section
@@ -41,24 +61,11 @@ export default function Contact() {
       </p>
 
       <form
-        ref={formRef}
         className="mt-10 flex flex-col dark:text-black"
-        action={async (formData) => {
-          const senderEmail = String(formData.get("senderEmail") ?? "");
-          const message = String(formData.get("message") ?? "");
-
-          try {
-            await contactApi.submit({ senderEmail, message });
-            toast.success("Message sent successfully!");
-            formRef.current?.reset();
-          } catch (error) {
-            toast.error(error instanceof Error ? error.message : "Failed to send message.");
-            return;
-          }
-        }}
+        onSubmit={handleSubmit}
       >
         <input
-          className="h-14 px-4 rounded-lg borderBlack dark:bg-white dark:bg-opacity-80 dark:focus:bg-opacity-100 transition-all dark:outline-none"
+          className="h-14 px-4 rounded-lg borderBlack dark:bg-white/80 dark:focus:bg-white transition-all dark:outline-hidden"
           name="senderEmail"
           type="email"
           required
@@ -66,13 +73,13 @@ export default function Contact() {
           placeholder="Your email"
         />
         <textarea
-          className="h-52 my-3 rounded-lg borderBlack p-4 dark:bg-white dark:bg-opacity-80 dark:focus:bg-opacity-100 transition-all dark:outline-none"
+          className="h-52 my-3 rounded-lg borderBlack p-4 dark:bg-white/80 dark:focus:bg-white transition-all dark:outline-hidden"
           name="message"
           placeholder="Your message"
           required
           maxLength={5000}
         />
-        <SubmitBtn />
+        <SubmitBtn pending={isPending} />
       </form>
     </motion.section>
   );

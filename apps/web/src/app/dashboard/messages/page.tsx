@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Mail, Trash2 } from "lucide-react";
-import { contactApi, type ContactMessageItem } from "@/lib/api";
+import { adminApi, type ContactMessageItem } from "@/lib/api";
 import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -18,27 +18,27 @@ export default function DashboardMessagesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const load = async () => {
-    try {
-      setLoading(true);
-      const data = await contactApi.list();
-      setList(data);
-      setError("");
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to load messages");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const load = useCallback(
+    () =>
+      adminApi.messages
+        .list()
+        .then((data) => {
+          setList(data);
+          setError("");
+        })
+        .catch((e) => setError(e instanceof Error ? e.message : "Failed to load messages"))
+        .finally(() => setLoading(false)),
+    []
+  );
 
   useEffect(() => {
     load();
-  }, []);
+  }, [load]);
 
   const remove = async (id: string) => {
     if (!confirm("Delete this message?")) return;
     try {
-      await contactApi.delete(id);
+      await adminApi.messages.delete(id);
       setList((prev) => prev.filter((item) => item._id !== id));
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to delete message");
@@ -95,7 +95,7 @@ export default function DashboardMessagesPage() {
                           {item.senderEmail}
                         </td>
                         <td className="px-4 py-3 text-muted-foreground">
-                          <p className="max-w-xl whitespace-pre-wrap break-words">
+                          <p className="max-w-xl whitespace-pre-wrap wrap-break-word">
                             {item.message}
                           </p>
                         </td>

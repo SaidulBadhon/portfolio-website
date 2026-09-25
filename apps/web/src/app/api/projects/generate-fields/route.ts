@@ -1,7 +1,10 @@
-import { NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import { google } from "@ai-sdk/google";
 import { generateText, Output } from "ai";
 import { z } from "zod";
+import { SESSION_COOKIE, verifySessionToken } from "@/lib/session";
+
+const MODEL_ID = "gemini-3.8-flash";
 
 const GeneratedFieldsSchema = z.object({
   description: z.string().optional(),
@@ -13,21 +16,20 @@ const GeneratedFieldsSchema = z.object({
   duration: z.string().optional(),
 });
 
-export type GeneratedFields = z.infer<typeof GeneratedFieldsSchema>;
+type GeneratedFields = z.infer<typeof GeneratedFieldsSchema>;
 
 /** Request body: partial project data from the form */
-type GenerateBody = {
-  id?: string;
-  title?: string;
-  description?: string;
-  tags?: string[];
-  longDescription?: string;
-  features?: string[];
-  technologies?: string[];
-  role?: string;
-  duration?: string;
-  links?: { live?: string; github?: string };
-};
+const GenerateBodySchema = z.object({
+  id: z.string().nullish(),
+  title: z.string().nullish(),
+  description: z.string().nullish(),
+  tags: z.array(z.string()).nullish(),
+  longDescription: z.string().nullish(),
+  features: z.array(z.string()).nullish(),
+  technologies: z.array(z.string()).nullish(),
+  role: z.string().nullish(),
+  duration: z.string().nullish(),
+});
 
 function isEmpty(value: unknown): boolean {
   if (value == null) return true;
@@ -36,7 +38,11 @@ function isEmpty(value: unknown): boolean {
   return false;
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  if (!verifySessionToken(request.cookies.get(SESSION_COOKIE)?.value)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
   if (!apiKey) {
     return NextResponse.json(
@@ -45,15 +51,16 @@ export async function POST(request: Request) {
     );
   }
 
-  let body: GenerateBody;
-  try {
-    body = await request.json();
-  } catch {
+  const parsed = GenerateBodySchema.safeParse(
+    await request.json().catch(() => null)
+  );
+  if (!parsed.success) {
     return NextResponse.json(
-      { error: "Invalid JSON body" },
+      { error: "Invalid request body" },
       { status: 400 }
     );
   }
+  const body = parsed.data;
 
   const provided = {
     id: body.id ?? "",
@@ -107,7 +114,7 @@ Generate only these missing fields (use exact keys, omit any field you prefer to
 
   try {
     const { output } = await generateText({
-      model: google("gemini-2.5-flash"),
+      model: google(MODEL_ID),
       output: Output.object({
         schema: GeneratedFieldsSchema,
       }),

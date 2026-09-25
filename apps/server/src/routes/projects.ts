@@ -1,16 +1,9 @@
 import { Hono } from "hono";
+import { requireAdmin } from "../auth.js";
+import { readBody } from "../body.js";
 import { Project } from "../models/Project.js";
 
 export const projects = new Hono();
-
-const isDuplicateKeyError = (error: unknown): boolean => {
-  return (
-    typeof error === "object" &&
-    error !== null &&
-    "code" in error &&
-    (error as { code?: number }).code === 11000
-  );
-};
 
 projects.get("/", async (c) => {
   const list = await Project.find().sort({ createdAt: -1 }).lean();
@@ -23,31 +16,22 @@ projects.get("/:id", async (c) => {
   return c.json(doc);
 });
 
-projects.post("/", async (c) => {
-  try {
-    const body = await c.req.json();
-    const doc = await Project.create(body);
-    return c.json(doc, 201);
-  } catch (error) {
-    if (isDuplicateKeyError(error)) {
-      return c.json({ error: "Project ID already exists." }, 409);
-    }
-    throw error;
-  }
+projects.post("/", requireAdmin, async (c) => {
+  const doc = await Project.create(await readBody(c));
+  return c.json(doc, 201);
 });
 
-projects.put("/:id", async (c) => {
-  const body = await c.req.json();
+projects.put("/:id", requireAdmin, async (c) => {
   const doc = await Project.findOneAndUpdate(
     { id: c.req.param("id") },
-    { $set: body },
-    { new: true }
+    { $set: await readBody(c) },
+    { returnDocument: "after", runValidators: true }
   );
   if (!doc) return c.json({ error: "Not found" }, 404);
   return c.json(doc);
 });
 
-projects.delete("/:id", async (c) => {
+projects.delete("/:id", requireAdmin, async (c) => {
   const result = await Project.findOneAndDelete({ id: c.req.param("id") });
   if (!result) return c.json({ error: "Not found" }, 404);
   return c.json({ ok: true });

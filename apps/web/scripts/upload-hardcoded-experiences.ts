@@ -19,10 +19,21 @@ type ApiError = {
 };
 
 const apiBase = (
-  process.env.NEXT_PUBLIC_API_URL ??
   process.env.API_URL ??
+  process.env.NEXT_PUBLIC_API_URL ??
   "http://localhost:4000"
 ).replace(/\/$/, "");
+
+const apiSecret = process.env.API_SECRET;
+if (!apiSecret) {
+  console.error("API_SECRET is required (it must match the API server's API_SECRET).");
+  process.exit(1);
+}
+
+const writeHeaders = {
+  "Content-Type": "application/json",
+  Authorization: `Bearer ${apiSecret}`,
+};
 
 const endpoint = `${apiBase}/api/experiences`;
 
@@ -42,7 +53,7 @@ const listExperiences = async () => {
 const createExperience = async (payload: ExperiencePayload) => {
   return fetch(endpoint, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: writeHeaders,
     body: JSON.stringify(payload),
   });
 };
@@ -50,7 +61,7 @@ const createExperience = async (payload: ExperiencePayload) => {
 const updateExperience = async (id: string, payload: ExperiencePayload) => {
   return fetch(`${endpoint}/${encodeURIComponent(id)}`, {
     method: "PUT",
-    headers: { "Content-Type": "application/json" },
+    headers: writeHeaders,
     body: JSON.stringify(payload),
   });
 };
@@ -79,7 +90,8 @@ const run = async () => {
   let updated = 0;
   let failed = 0;
 
-  for (const item of experiencesData) {
+  // Insert oldest-first: the API lists newest first, so the site shows this file's order.
+  for (const item of [...experiencesData].reverse()) {
     const payload = toPayload(item);
     const key = keyFor(payload);
     const match = byKey.get(key);

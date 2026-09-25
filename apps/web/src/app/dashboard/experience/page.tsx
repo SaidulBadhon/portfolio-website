@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { experiencesApi, type ExperienceItem } from "@/lib/api";
+import { useCallback, useEffect, useState } from "react";
+import { adminApi, type ExperienceItem } from "@/lib/api";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -38,22 +38,22 @@ export default function DashboardExperiencePage() {
   const [form, setForm] = useState(emptyForm());
   const [saving, setSaving] = useState(false);
 
-  const load = async () => {
-    try {
-      setLoading(true);
-      const data = await experiencesApi.list();
-      setList(data);
-      setError("");
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to load");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const load = useCallback(
+    () =>
+      adminApi.experiences
+        .list()
+        .then((data) => {
+          setList(data);
+          setError("");
+        })
+        .catch((e) => setError(e instanceof Error ? e.message : "Failed to load"))
+        .finally(() => setLoading(false)),
+    []
+  );
 
   useEffect(() => {
     load();
-  }, []);
+  }, [load]);
 
   const openNew = () => {
     setForm(emptyForm());
@@ -85,9 +85,9 @@ export default function DashboardExperiencePage() {
     setError("");
     try {
       if (modal === "new") {
-        await experiencesApi.create(form);
+        await adminApi.experiences.create(form);
       } else {
-        await experiencesApi.update((modal as ExperienceItem)._id, form);
+        await adminApi.experiences.update((modal as ExperienceItem)._id, form);
       }
       closeModal();
       load();
@@ -101,7 +101,7 @@ export default function DashboardExperiencePage() {
   const remove = async (id: string) => {
     if (!confirm("Delete this experience?")) return;
     try {
-      await experiencesApi.delete(id);
+      await adminApi.experiences.delete(id);
       load();
     } catch (e) {
       setError(e instanceof Error ? e.message : "Delete failed");

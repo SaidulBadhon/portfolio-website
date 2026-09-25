@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { projectsApi, type ProjectItem } from "@/lib/api";
+import { useCallback, useEffect, useState } from "react";
+import { adminApi, type ProjectItem } from "@/lib/api";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -37,22 +37,22 @@ export default function DashboardProjectsPage() {
   const [error, setError] = useState("");
   const [modal, setModal] = useState<"new" | ProjectItem | null>(null);
 
-  const load = async () => {
-    try {
-      setLoading(true);
-      const data = await projectsApi.list();
-      setList(data);
-      setError("");
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to load");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const load = useCallback(
+    () =>
+      adminApi.projects
+        .list()
+        .then((data) => {
+          setList(data);
+          setError("");
+        })
+        .catch((e) => setError(e instanceof Error ? e.message : "Failed to load"))
+        .finally(() => setLoading(false)),
+    []
+  );
 
   useEffect(() => {
     load();
-  }, []);
+  }, [load]);
 
   const openNew = () => setModal("new");
   const openEdit = (p: ProjectItem) => setModal(p);
@@ -61,7 +61,7 @@ export default function DashboardProjectsPage() {
   const remove = async (id: string) => {
     if (!confirm("Delete this project?")) return;
     try {
-      await projectsApi.delete(id);
+      await adminApi.projects.delete(id);
       load();
     } catch (e) {
       setError(e instanceof Error ? e.message : "Delete failed");

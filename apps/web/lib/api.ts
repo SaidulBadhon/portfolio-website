@@ -1,22 +1,41 @@
-const getBaseUrl = () =>
-  process.env.API_URL ||
-  process.env.NEXT_PUBLIC_API_URL ||
-  "http://localhost:4000";
+/** Base URL of the backend API (Bun + Hono server). */
+export const getApiBaseUrl = () =>
+  (
+    process.env.API_URL ||
+    process.env.NEXT_PUBLIC_API_URL ||
+    "http://localhost:4000"
+  ).replace(/\/$/, "");
 
-export async function apiFetch<T>(
-  path: string,
-  options?: RequestInit
-): Promise<T> {
-  const res = await fetch(`${getBaseUrl()}${path}`, {
+async function request<T>(url: string, options?: RequestInit): Promise<T> {
+  const res = await fetch(url, {
     ...options,
-    headers: { "Content-Type": "application/json", ...options?.headers },
+    headers: options?.body
+      ? { "Content-Type": "application/json", ...options.headers }
+      : options?.headers,
   });
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
-    throw new Error((err as { error?: string }).error || res.statusText);
+    throw new Error(
+      (err as { error?: string }).error ||
+        res.statusText ||
+        `Request failed (${res.status})`
+    );
   }
   return res.json();
 }
+
+/** Public, read-only endpoints (plus the contact form). */
+const publicFetch = <T>(path: string, options?: RequestInit) =>
+  request<T>(`${getApiBaseUrl()}${path}`, options);
+
+/** Dashboard endpoints, proxied through the authenticated /api/admin route. */
+const adminFetch = <T>(path: string, options?: RequestInit) =>
+  request<T>(`/api/admin${path}`, { cache: "no-store", ...options });
+
+const json = (method: string, body: unknown): RequestInit => ({
+  method,
+  body: JSON.stringify(body),
+});
 
 // Projects
 export type ProjectItem = {
@@ -40,28 +59,18 @@ export type ProjectItem = {
 };
 
 export const projectsApi = {
-  list: (options?: RequestInit) => apiFetch<ProjectItem[]>("/api/projects", options),
+  list: (options?: RequestInit) =>
+    publicFetch<ProjectItem[]>("/api/projects", options),
   get: (id: string, options?: RequestInit) =>
-    apiFetch<ProjectItem>(`/api/projects/${id}`, options),
-  create: (body: Partial<ProjectItem>) =>
-    apiFetch<ProjectItem>("/api/projects", { method: "POST", body: JSON.stringify(body) }),
-  update: (id: string, body: Partial<ProjectItem>) =>
-    apiFetch<ProjectItem>(`/api/projects/${id}`, { method: "PUT", body: JSON.stringify(body) }),
-  delete: (id: string) =>
-    apiFetch<{ ok: boolean }>(`/api/projects/${id}`, { method: "DELETE" }),
+    publicFetch<ProjectItem>(`/api/projects/${encodeURIComponent(id)}`, options),
 };
 
 // Skills
 export type SkillItem = { _id: string; name: string; color?: string };
 
 export const skillsApi = {
-  list: (options?: RequestInit) => apiFetch<SkillItem[]>("/api/skills", options),
-  create: (body: { name: string; color?: string }) =>
-    apiFetch<SkillItem>("/api/skills", { method: "POST", body: JSON.stringify(body) }),
-  update: (id: string, body: { name: string; color?: string }) =>
-    apiFetch<SkillItem>(`/api/skills/${id}`, { method: "PUT", body: JSON.stringify(body) }),
-  delete: (id: string) =>
-    apiFetch<{ ok: boolean }>(`/api/skills/${id}`, { method: "DELETE" }),
+  list: (options?: RequestInit) =>
+    publicFetch<SkillItem[]>("/api/skills", options),
 };
 
 // Experiences
@@ -77,13 +86,8 @@ export type ExperienceItem = {
 };
 
 export const experiencesApi = {
-  list: (options?: RequestInit) => apiFetch<ExperienceItem[]>("/api/experiences", options),
-  create: (body: Omit<ExperienceItem, "_id">) =>
-    apiFetch<ExperienceItem>("/api/experiences", { method: "POST", body: JSON.stringify(body) }),
-  update: (id: string, body: Partial<Omit<ExperienceItem, "_id">>) =>
-    apiFetch<ExperienceItem>(`/api/experiences/${id}`, { method: "PUT", body: JSON.stringify(body) }),
-  delete: (id: string) =>
-    apiFetch<{ ok: boolean }>(`/api/experiences/${id}`, { method: "DELETE" }),
+  list: (options?: RequestInit) =>
+    publicFetch<ExperienceItem[]>("/api/experiences", options),
 };
 
 // Contact
@@ -97,11 +101,55 @@ export type ContactMessageItem = {
 
 export const contactApi = {
   submit: (body: { senderEmail: string; message: string }) =>
-    apiFetch<{ ok: boolean; id: string }>("/api/contact", {
-      method: "POST",
-      body: JSON.stringify(body),
-    }),
-  list: (options?: RequestInit) => apiFetch<ContactMessageItem[]>("/api/contact", options),
-  delete: (id: string) =>
-    apiFetch<{ ok: boolean }>(`/api/contact/${id}`, { method: "DELETE" }),
+    publicFetch<{ ok: boolean; id: string }>("/api/contact", json("POST", body)),
+};
+
+// Dashboard (requires a dashboard session)
+type SkillInput = { name: string; color?: string };
+type ExperienceInput = Omit<ExperienceItem, "_id">;
+type Ok = { ok: boolean };
+
+export const adminApi = {
+  projects: {
+    list: () => adminFetch<ProjectItem[]>("/projects"),
+    create: (body: Partial<ProjectItem>) =>
+      adminFetch<ProjectItem>("/projects", json("POST", body)),
+    update: (id: string, body: Partial<ProjectItem>) =>
+      adminFetch<ProjectItem>(
+        `/projects/${encodeURIComponent(id)}`,
+        json("PUT", body)
+      ),
+    delete: (id: string) =>
+      adminFetch<Ok>(`/projects/${encodeURIComponent(id)}`, {
+        method: "DELETE",
+      }),
+  },
+  skills: {
+    list: () => adminFetch<SkillItem[]>("/skills"),
+    create: (body: SkillInput) =>
+      adminFetch<SkillItem>("/skills", json("POST", body)),
+    update: (id: string, body: SkillInput) =>
+      adminFetch<SkillItem>(`/skills/${encodeURIComponent(id)}`, json("PUT", body)),
+    delete: (id: string) =>
+      adminFetch<Ok>(`/skills/${encodeURIComponent(id)}`, { method: "DELETE" }),
+  },
+  experiences: {
+    list: () => adminFetch<ExperienceItem[]>("/experiences"),
+    create: (body: ExperienceInput) =>
+      adminFetch<ExperienceItem>("/experiences", json("POST", body)),
+    update: (id: string, body: Partial<ExperienceInput>) =>
+      adminFetch<ExperienceItem>(
+        `/experiences/${encodeURIComponent(id)}`,
+        json("PUT", body)
+      ),
+    delete: (id: string) =>
+      adminFetch<Ok>(`/experiences/${encodeURIComponent(id)}`, {
+        method: "DELETE",
+      }),
+  },
+  messages: {
+    list: () => adminFetch<ContactMessageItem[]>("/contact"),
+    delete: (id: string) =>
+      adminFetch<Ok>(`/contact/${encodeURIComponent(id)}`, { method: "DELETE" }),
+  },
 };
