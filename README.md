@@ -1,33 +1,60 @@
-[![Watch tutorial here](https://img.youtube.com/vi/sUKptmUVIBM/0.jpg)](https://youtu.be/sUKptmUVIBM)
+# Saidul Badhon — Portfolio
 
-# [Watch video here](https://youtu.be/sUKptmUVIBM)
+Personal portfolio site built with Next.js 16, React 19, Tailwind CSS 4 and
+Motion. All content is hardcoded in the repo, so there is no database or API
+to run, and every page is statically generated.
 
-## What you will learn
+Originally based on ByteGrad's [portfolio tutorial](https://youtu.be/sUKptmUVIBM).
 
-- Latest Next.js 13 features
-- Next.js App Router
-- Next.js Server Actions
-- Client & Server Components
-- TypeScript (Beginner & Intermediate)
-- Tailwind CSS
-- Context API
-- Advanced Animations with Framer Motion
-- React.Email & Resend
-- Custom React hooks
-- Fresh, modern UI design
-- Light & Dark mode
-- Responsive website
+## Requirements
 
-## Important
+- Node.js 20.9 or newer
+- [Bun](https://bun.sh) (package manager)
 
-If you want to be a professional developer, you have to know the fundamentals like JavaScript and CSS really well. I highly recommend you go through my [Professional JavaScript](https://bytegrad.com/courses/professional-javascript) and [Professional CSS](https://bytegrad.com/courses/professional-css) courses.
+## Getting started
 
-I'm close to releasing a complete React & Next.js course. Get on the email list to receive early-bird pricing: [link](https://email.bytegrad.com/).
+```bash
+bun install
+bun run dev      # http://localhost:3000
+```
 
-## Setup
+The contact form emails messages through [Resend](https://resend.com). Set
+`RESEND_API_KEY` in `apps/web/.env.local` (see `apps/web/.env.local.example`).
+Without it the rest of the site works, and the form asks visitors to email
+directly.
 
-1. Add RESEND_API_KEY environment variable in .env.local
-2. In the send-email.ts action file, change the "to" email to your own email
+## Editing content
 
+Everything lives in `apps/web/content`:
 
-# This this has been updated by app.jutsu.ai
+```
+content/
+├── projects/
+│   ├── index.ts              # which projects are shown, in order
+│   ├── types.ts              # the Project shape
+│   └── <project-slug>/
+│       ├── index.ts          # title, description, tags, links, ...
+│       └── cover.png         # images for this project
+├── experience/
+│   ├── index.ts              # work history timeline
+│   └── logos/
+└── skills.ts
+```
+
+**Add a project:** copy an existing project folder, rename it (the folder name
+becomes the URL, `/projects/<slug>`), update its `index.ts` and images, then add
+it to the list in `content/projects/index.ts`.
+
+**Add screenshots to a project:** put the files in the project's folder, import
+them in its `index.ts`, and add them to `images`. The first image is the cover;
+the rest appear in a "Screenshots" section on the project page.
+
+## Scripts
+
+| Command             | Description                  |
+| ------------------- | ---------------------------- |
+| `bun run dev`       | Start the dev server         |
+| `bun run build`     | Production build             |
+| `bun run start`     | Serve the production build   |
+| `bun run lint`      | Lint with ESLint             |
+| `bun run typecheck` | Type-check with TypeScript   |

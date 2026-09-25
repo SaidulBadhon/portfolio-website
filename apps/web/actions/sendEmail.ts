@@ -1,47 +1,52 @@
 "use server";
 
-import React from "react";
 import { Resend } from "resend";
-import { validateString, getErrorMessage } from "@/lib/utils";
-import ContactFormEmail from "@/email/contact-form-email";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const CONTACT_EMAIL = "Saidulbadhon@gmail.com";
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export const sendEmail = async (formData: FormData) => {
-  const senderEmail = formData.get("senderEmail");
-  const message = formData.get("message");
-
-  // simple server-side validation
-  if (!validateString(senderEmail, 500)) {
-    return {
-      error: "Invalid sender email",
-    };
-  }
-  if (!validateString(message, 5000)) {
-    return {
-      error: "Invalid message",
-    };
-  }
-
-  let data;
-  try {
-    data = await resend.emails.send({
-      from: "Contact Form <onboarding@resend.dev>",
-      to: "Saidulbadhon@gmail.com",
-      subject: "Message from contact form",
-      replyTo: senderEmail,
-      react: React.createElement(ContactFormEmail, {
-        message: message,
-        senderEmail: senderEmail,
-      }),
-    });
-  } catch (error: unknown) {
-    return {
-      error: getErrorMessage(error),
-    };
-  }
-
-  return {
-    data,
-  };
+type SendEmailInput = {
+  senderEmail: unknown;
+  message: unknown;
 };
+
+/** Emails a contact form submission to the site owner via Resend. */
+export async function sendEmail({
+  senderEmail,
+  message,
+}: SendEmailInput): Promise<{ error?: string }> {
+  if (
+    typeof senderEmail !== "string" ||
+    senderEmail.length > 500 ||
+    !EMAIL_PATTERN.test(senderEmail.trim())
+  ) {
+    return { error: "Invalid sender email." };
+  }
+  if (
+    typeof message !== "string" ||
+    !message.trim() ||
+    message.length > 5000
+  ) {
+    return { error: "Invalid message." };
+  }
+
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    console.error("RESEND_API_KEY is not set; contact form emails can't be sent.");
+    return { error: `Sending failed. Please email me at ${CONTACT_EMAIL}.` };
+  }
+
+  const { error } = await new Resend(apiKey).emails.send({
+    from: "Contact Form <onboarding@resend.dev>",
+    to: CONTACT_EMAIL,
+    subject: "Message from contact form",
+    replyTo: senderEmail.trim(),
+    text: `${message.trim()}\n\n---\nSent from the portfolio contact form by ${senderEmail.trim()}`,
+  });
+
+  if (error) {
+    console.error("Resend error:", error);
+    return { error: `Sending failed. Please email me at ${CONTACT_EMAIL}.` };
+  }
+  return {};
+}

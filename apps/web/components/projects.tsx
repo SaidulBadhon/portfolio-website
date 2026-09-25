@@ -1,12 +1,13 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import SectionHeading from "./section-heading";
 import { useSectionInView } from "@/lib/hooks";
 import { projectIconMap } from "@/lib/projectIcons";
-import type { ProjectItem } from "@/lib/api";
+import { projects } from "@/content/projects";
 import { FaArrowRight } from "react-icons/fa";
 
 const fadeInUp = {
@@ -23,14 +24,7 @@ const staggerContainer = {
   },
 };
 
-type ProjectsProps = {
-  projects: ProjectItem[];
-};
-
-const hasIcon = (icon: string | undefined): icon is keyof typeof projectIconMap =>
-  Boolean(icon && icon in projectIconMap);
-
-export default function Projects({ projects }: ProjectsProps) {
+export default function Projects() {
   const { ref } = useSectionInView("Projects", 0.5);
 
   return (
@@ -58,38 +52,39 @@ export default function Projects({ projects }: ProjectsProps) {
           className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
         >
           {projects.map((project) => {
-            const IconComponent = hasIcon(project.icon)
-              ? projectIconMap[project.icon]
-              : projectIconMap.rocket;
-            const gradient = project.gradient ?? "from-violet-500 to-purple-600";
+            const IconComponent = projectIconMap[project.icon];
+            const { gradient } = project;
+            const cover = project.images[0];
             return (
               <motion.div
-                key={project.id}
+                key={project.slug}
                 variants={fadeInUp}
                 whileHover={{ y: -5, scale: 1.02 }}
                 transition={{ duration: 0.2 }}
               >
-                <Link href={`/projects/${project.id}`} className="block cursor-pointer">
-                  <div className="group h-full overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg backdrop-blur-sm transition-all duration-300 hover:border-violet-500/30 dark:border-white/5 dark:bg-slate-800/30">
+                <Link href={`/projects/${project.slug}`} className="block cursor-pointer">
+                  <div className="group h-full overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg backdrop-blur-xs transition-all duration-300 hover:border-violet-500/30 dark:border-white/5 dark:bg-slate-800/30">
                     <div
-                      className={`h-2 bg-gradient-to-r ${gradient}`}
+                      className={`h-2 bg-linear-to-r ${gradient}`}
                     />
                     <div className="relative h-40 overflow-hidden">
-                      <div
-                        className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-20`}
-                      />
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      {(project.images?.[0] || project.logo) && (
-                        <img
-                          src={project.images?.[0] ?? project.logo}
+                      {cover && (
+                        <Image
+                          src={cover}
                           alt={project.title}
-                          className="h-full w-full object-cover opacity-60 transition-all duration-500 group-hover:scale-105 group-hover:opacity-80"
+                          fill
+                          sizes="(min-width: 1024px) 400px, (min-width: 768px) 50vw, 100vw"
+                          placeholder="blur"
+                          className="object-cover opacity-60 transition-all duration-500 group-hover:scale-105 group-hover:opacity-80"
                         />
                       )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-white via-white/50 to-transparent dark:from-slate-900 dark:via-slate-900/50 dark:to-transparent" />
+                      <div
+                        className={`absolute inset-0 bg-linear-to-br ${gradient} opacity-20`}
+                      />
+                      <div className="absolute inset-0 bg-linear-to-t from-white via-white/50 to-transparent dark:from-slate-900 dark:via-slate-900/50 dark:to-transparent" />
                       <div className="absolute right-3 top-3">
-                        <span className="rounded-full bg-black/60 px-2 py-1 text-xs text-white backdrop-blur-sm dark:bg-slate-800/80 dark:text-slate-300">
-                          {project.type ?? "Project"}
+                        <span className="rounded-full bg-black/60 px-2 py-1 text-xs text-white backdrop-blur-xs dark:bg-slate-800/80 dark:text-slate-300">
+                          {project.type}
                         </span>
                       </div>
                       <div className="absolute bottom-3 right-3 opacity-0 transition-opacity group-hover:opacity-100">
@@ -100,7 +95,7 @@ export default function Projects({ projects }: ProjectsProps) {
                     </div>
                     <div className="-mt-8 relative px-4 pb-2 pt-4">
                       <div
-                        className={`inline-flex rounded-xl bg-gradient-to-br ${gradient} p-3 shadow-lg`}
+                        className={`inline-flex rounded-xl bg-linear-to-br ${gradient} p-3 shadow-lg`}
                       >
                         <IconComponent size={24} className="text-white" />
                       </div>

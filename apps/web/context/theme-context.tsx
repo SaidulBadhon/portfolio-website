@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, createContext, useContext } from "react";
+import React, { createContext, useContext, useSyncExternalStore } from "react";
 
 type Theme = "light" | "dark";
 
@@ -15,37 +15,40 @@ type ThemeContextType = {
 
 const ThemeContext = createContext<ThemeContextType | null>(null);
 
+// The <html> class is the source of truth for the current theme. The root
+// layout sets it from localStorage / the system preference before first paint.
+const listeners = new Set<() => void>();
+
+function subscribe(listener: () => void) {
+  listeners.add(listener);
+  return () => {
+    listeners.delete(listener);
+  };
+}
+
+function getSnapshot(): Theme {
+  return document.documentElement.classList.contains("dark") ? "dark" : "light";
+}
+
+function getServerSnapshot(): Theme {
+  return "light";
+}
+
 export default function ThemeContextProvider({
   children,
 }: ThemeContextProviderProps) {
-  const [theme, setTheme] = useState<Theme>("light");
+  const theme = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
   const toggleTheme = () => {
-    if (theme === "light") {
-      setTheme("dark");
-      window.localStorage.setItem("theme", "dark");
-      document.documentElement.classList.add("dark");
-    } else {
-      setTheme("light");
-      window.localStorage.setItem("theme", "light");
-      document.documentElement.classList.remove("dark");
+    const next: Theme = theme === "light" ? "dark" : "light";
+    document.documentElement.classList.toggle("dark", next === "dark");
+    try {
+      window.localStorage.setItem("theme", next);
+    } catch {
+      // Storage can be unavailable (e.g. private mode); the theme still applies.
     }
+    listeners.forEach((listener) => listener());
   };
-
-  useEffect(() => {
-    const localTheme = window.localStorage.getItem("theme") as Theme | null;
-
-    if (localTheme) {
-      setTheme(localTheme);
-
-      if (localTheme === "dark") {
-        document.documentElement.classList.add("dark");
-      }
-    } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      setTheme("dark");
-      document.documentElement.classList.add("dark");
-    }
-  }, []);
 
   return (
     <ThemeContext.Provider
