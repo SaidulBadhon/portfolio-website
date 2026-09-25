@@ -7,16 +7,6 @@ const nextConfig: NextConfig = {
   images: {
     // Next.js 16 only allows quality 75 by default; the profile photo uses 95.
     qualities: [75, 95],
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "images.unsplash.com",
-      },
-      {
-        protocol: "https",
-        hostname: "ipfs.near.social",
-      },
-    ],
   },
 };
 

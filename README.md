@@ -1,74 +1,60 @@
 # Saidul Badhon — Portfolio
 
-Personal portfolio site with a small CMS dashboard for projects, skills,
-experience, and contact messages.
+Personal portfolio site built with Next.js 16, React 19, Tailwind CSS 4 and
+Motion. All content is hardcoded in the repo, so there is no database or API
+to run, and every page is statically generated.
 
 Originally based on ByteGrad's [portfolio tutorial](https://youtu.be/sUKptmUVIBM).
 
-## Stack
-
-| Package       | What it is                                                                                    |
-| ------------- | --------------------------------------------------------------------------------------------- |
-| `apps/web`    | Next.js 16 (App Router, Turbopack), React 19, Tailwind CSS 4, shadcn/ui (Base UI), Motion      |
-| `apps/server` | Bun + Hono REST API, MongoDB via Mongoose 9                                                   |
-
-The repo is a Bun workspace.
-
 ## Requirements
 
-- [Bun](https://bun.sh) 1.4 or newer (the MongoDB driver used by the API needs it)
-- Node.js 20.9 or newer (for Next.js)
-- A MongoDB database
+- Node.js 20.9 or newer
+- [Bun](https://bun.sh) (package manager)
 
-## Setup
+## Getting started
 
 ```bash
 bun install
+bun run dev      # http://localhost:3000
 ```
 
-Configure `apps/server/.env` (see `apps/server/.env.example`):
+The contact form emails messages through [Resend](https://resend.com). Set
+`RESEND_API_KEY` in `apps/web/.env.local` (see `apps/web/.env.local.example`).
+Without it the rest of the site works, and the form asks visitors to email
+directly.
 
-| Variable      | Description                                                              |
-| ------------- | ------------------------------------------------------------------------ |
-| `PORT`        | API port (default `4000`)                                                |
-| `MONGODB_URI` | MongoDB connection string                                                |
-| `API_SECRET`  | Shared secret required by every write/admin endpoint                     |
+## Editing content
 
-Configure `apps/web/.env.local` (see `apps/web/.env.local.example`):
+Everything lives in `apps/web/content`:
 
-| Variable                       | Description                                                          |
-| ------------------------------ | -------------------------------------------------------------------- |
-| `API_URL`                      | API base URL used on the server                                      |
-| `NEXT_PUBLIC_API_URL`          | API base URL used in the browser by the contact form                 |
-| `DASHBOARD_PASSWORD`           | Password for `/dashboard`                                            |
-| `API_SECRET`                   | Same value as the server's `API_SECRET`; also signs dashboard sessions |
-| `GOOGLE_GENERATIVE_AI_API_KEY` | Optional, enables "Generate with AI" in the project form            |
-
-Generate a secret with `openssl rand -hex 32`.
-
-## Development
-
-```bash
-bun run dev:all   # API on http://localhost:4000, site on http://localhost:3000
+```
+content/
+├── projects/
+│   ├── index.ts              # which projects are shown, in order
+│   ├── types.ts              # the Project shape
+│   └── <project-slug>/
+│       ├── index.ts          # title, description, tags, links, ...
+│       └── cover.png         # images for this project
+├── experience/
+│   ├── index.ts              # work history timeline
+│   └── logos/
+└── skills.ts
 ```
 
-The dashboard is at http://localhost:3000/dashboard. To load the original
-hardcoded content into the database, see [`apps/web/scripts/readme.md`](apps/web/scripts/readme.md).
+**Add a project:** copy an existing project folder, rename it (the folder name
+becomes the URL, `/projects/<slug>`), update its `index.ts` and images, then add
+it to the list in `content/projects/index.ts`.
+
+**Add screenshots to a project:** put the files in the project's folder, import
+them in its `index.ts`, and add them to `images`. The first image is the cover;
+the rest appear in a "Screenshots" section on the project page.
 
 ## Scripts
 
-| Command             | Description                           |
-| ------------------- | ------------------------------------- |
-| `bun run dev`       | Start the Next.js dev server          |
-| `bun run dev:server`| Start the API with hot reload         |
-| `bun run build`     | Production build of the site          |
-| `bun run lint`      | Lint the site with ESLint             |
-| `bun run typecheck` | Type-check both apps                  |
-
-## Security
-
-- The API's read endpoints are public. Creating, updating, and deleting
-  content, and reading contact messages, require `Authorization: Bearer <API_SECRET>`.
-- The dashboard never exposes `API_SECRET` to the browser: it calls the site's
-  `/api/admin/*` route, which checks the signed session cookie and forwards the
-  request to the API with the secret.
+| Command             | Description                  |
+| ------------------- | ---------------------------- |
+| `bun run dev`       | Start the dev server         |
+| `bun run build`     | Production build             |
+| `bun run start`     | Serve the production build   |
+| `bun run lint`      | Lint with ESLint             |
+| `bun run typecheck` | Type-check with TypeScript   |

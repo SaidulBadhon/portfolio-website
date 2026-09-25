@@ -8,7 +8,7 @@ import {
   FaDatabase,
   FaGlobe,
 } from "react-icons/fa";
-import type { ProjectIconKey } from "@/lib/data/projectsCardData";
+import type { ProjectIconKey } from "@/content/projects";
 
 export const projectIconMap: Record<
   ProjectIconKey,

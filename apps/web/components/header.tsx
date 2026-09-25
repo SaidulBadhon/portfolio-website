@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion } from "motion/react";
-import { links } from "@/lib/data/links";
+import { links } from "@/lib/links";
 import Link from "next/link";
 import { useActiveSectionContext } from "@/context/active-section-context";
 import { clsx } from "cn";

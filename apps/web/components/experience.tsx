@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
+import Image, { type StaticImageData } from "next/image";
 import SectionHeading from "./section-heading";
 import {
   VerticalTimeline,
@@ -8,23 +9,23 @@ import {
 } from "react-vertical-timeline-component";
 import "react-vertical-timeline-component/style.min.css";
 import { useSectionInView } from "@/lib/hooks";
-import type { ExperienceItem } from "@/lib/api";
+import { experiences } from "@/content/experience";
 
-type ExperienceProps = {
-  experiences: ExperienceItem[];
-};
-
-function CompanyIcon({ company, logo }: { company: string; logo?: string }) {
-  const [failed, setFailed] = useState(false);
-
-  if (logo && !failed) {
+function CompanyIcon({
+  company,
+  logo,
+}: {
+  company: string;
+  logo?: StaticImageData;
+}) {
+  if (logo) {
     return (
-      // eslint-disable-next-line @next/next/no-img-element -- logo URLs come from the CMS
-      <img
+      <Image
         src={logo}
         alt={`${company} logo`}
+        width={60}
+        height={60}
         className="w-full h-full rounded-full object-cover"
-        onError={() => setFailed(true)}
       />
     );
   }
@@ -36,7 +37,7 @@ function CompanyIcon({ company, logo }: { company: string; logo?: string }) {
   );
 }
 
-export default function Experience({ experiences }: ExperienceProps) {
+export default function Experience() {
   const { ref } = useSectionInView("Experience");
 
   return (
@@ -44,7 +45,7 @@ export default function Experience({ experiences }: ExperienceProps) {
       <SectionHeading>My experience</SectionHeading>
       <VerticalTimeline lineColor="">
         {experiences.map((item, index) => (
-          <React.Fragment key={item._id ?? `${item.title}-${index}`}>
+          <React.Fragment key={`${item.company}-${item.title}-${index}`}>
             <VerticalTimelineElement
               contentStyle={{
                 background: "var(--timeline-card-bg)",
@@ -56,8 +57,8 @@ export default function Experience({ experiences }: ExperienceProps) {
               contentArrowStyle={{
                 borderRight: "0.4rem solid var(--timeline-arrow-color)",
               }}
-              date={item.date ?? ""}
-              icon={<CompanyIcon company={item.company} logo={item.companyLogo} />}
+              date={item.date}
+              icon={<CompanyIcon company={item.company} logo={item.logo} />}
               iconStyle={{
                 background: "var(--timeline-icon-bg)",
                 boxShadow:
@@ -74,11 +75,11 @@ export default function Experience({ experiences }: ExperienceProps) {
                 <span className="px-2">•</span>
 
                 <span className="mt-1! text-sm font-normal text-gray-500 dark:text-gray-400">
-                  {item.location || "Remote"}
+                  {item.location}
                 </span>
               </p>
               <p className="mt-2! text-xs leading-relaxed text-gray-700 dark:text-white/75">
-                {item.description ?? ""}
+                {item.description}
               </p>
             </VerticalTimelineElement>
           </React.Fragment>

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { motion } from "motion/react";
 import {
@@ -13,9 +14,10 @@ import {
   FaCog,
   FaExternalLinkAlt,
   FaGithub,
+  FaImages,
 } from "react-icons/fa";
 import { projectIconMap } from "@/lib/projectIcons";
-import type { ProjectItem } from "@/lib/api";
+import type { Project } from "@/content/projects";
 
 const container = {
   hidden: { opacity: 0 },
@@ -31,25 +33,17 @@ const item = {
 };
 
 type ProjectDetailPageProps = {
-  project: ProjectItem;
+  project: Project;
 };
 
-// Seed data uses "#" as a placeholder for links that don't exist.
-const isRealLink = (url?: string): url is string =>
-  Boolean(url && url.trim() !== "" && url.trim() !== "#");
-
 export default function ProjectDetailPage({ project }: ProjectDetailPageProps) {
-  const IconComponent =
-    project.icon && project.icon in projectIconMap
-      ? projectIconMap[project.icon as keyof typeof projectIconMap]
-      : projectIconMap.rocket;
-  const gradient = project.gradient ?? "from-violet-500 to-purple-600";
-  const features = project.features ?? [];
-  const technologies = project.technologies?.length
+  const IconComponent = projectIconMap[project.icon];
+  const { gradient, features } = project;
+  const technologies = project.technologies.length
     ? project.technologies
     : project.tags;
-  const liveUrl = project.links?.live;
-  const githubUrl = project.links?.github;
+  const [cover, ...screenshots] = project.images;
+  const { live: liveUrl, github: githubUrl } = project.links;
 
   return (
     <main className="min-h-screen bg-gray-50 dark:bg-gray-900 -mt-28 sm:-mt-36">
@@ -111,11 +105,13 @@ export default function ProjectDetailPage({ project }: ProjectDetailPageProps) {
             <div
               className={`absolute inset-0 bg-linear-to-br ${gradient} opacity-20`}
             />
-            {project.images?.[0] && (
-              // eslint-disable-next-line @next/next/no-img-element -- image URLs come from the CMS
-              <img
-                src={project.images[0]}
+            {cover && (
+              <Image
+                src={cover}
                 alt={project.title}
+                sizes="(min-width: 896px) 896px, 100vw"
+                placeholder="blur"
+                preload
                 className="relative h-56 w-full object-cover sm:h-72 md:h-80"
               />
             )}
@@ -169,7 +165,7 @@ export default function ProjectDetailPage({ project }: ProjectDetailPageProps) {
               Overview
             </h2>
             <p className="leading-relaxed text-gray-600 dark:text-slate-300 text-base">
-              {project.longDescription || project.description}
+              {project.longDescription}
             </p>
           </motion.section>
 
@@ -220,13 +216,37 @@ export default function ProjectDetailPage({ project }: ProjectDetailPageProps) {
             </div>
           </motion.section>
 
+          {/* Screenshots: any images after the cover */}
+          {screenshots.length > 0 && (
+            <motion.section variants={item} className="mb-10">
+              <h2 className="mb-3 flex items-center gap-2 text-xl font-semibold text-gray-900 dark:text-white">
+                <span className="rounded-lg bg-violet-500/20 p-1.5">
+                  <FaImages size={18} className="text-violet-500 dark:text-violet-400" />
+                </span>
+                Screenshots
+              </h2>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {screenshots.map((image, index) => (
+                  <Image
+                    key={image.src}
+                    src={image}
+                    alt={`${project.title} screenshot ${index + 1}`}
+                    sizes="(min-width: 896px) 432px, (min-width: 640px) 50vw, 100vw"
+                    placeholder="blur"
+                    className="h-auto w-full rounded-xl border border-gray-200 dark:border-white/10"
+                  />
+                ))}
+              </div>
+            </motion.section>
+          )}
+
           {/* CTA links */}
-          {(isRealLink(liveUrl) || isRealLink(githubUrl)) && (
+          {(liveUrl || githubUrl) && (
             <motion.div
               variants={item}
               className="flex flex-wrap gap-4 border-t border-gray-200 pt-8 dark:border-white/10"
             >
-              {isRealLink(liveUrl) && (
+              {liveUrl && (
                 <a
                   href={liveUrl}
                   target="_blank"
@@ -237,7 +257,7 @@ export default function ProjectDetailPage({ project }: ProjectDetailPageProps) {
                   View Live
                 </a>
               )}
-              {isRealLink(githubUrl) && (
+              {githubUrl && (
                 <a
                   href={githubUrl}
                   target="_blank"

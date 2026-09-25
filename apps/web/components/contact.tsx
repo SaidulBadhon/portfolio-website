@@ -4,7 +4,7 @@ import React from "react";
 import SectionHeading from "./section-heading";
 import { motion } from "motion/react";
 import { useSectionInView } from "@/lib/hooks";
-import { contactApi } from "@/lib/api";
+import { sendEmail } from "@/actions/sendEmail";
 import SubmitBtn from "./submit-btn";
 import toast from "react-hot-toast";
 
@@ -22,13 +22,15 @@ export default function Contact() {
     const message = String(formData.get("message") ?? "");
 
     startTransition(async () => {
-      try {
-        await contactApi.submit({ senderEmail, message });
-        toast.success("Message sent successfully!");
-        form.reset();
-      } catch (error) {
-        toast.error(error instanceof Error ? error.message : "Failed to send message.");
+      const { error } = await sendEmail({ senderEmail, message }).catch(() => ({
+        error: "Failed to send message.",
+      }));
+      if (error) {
+        toast.error(error);
+        return;
       }
+      toast.success("Message sent successfully!");
+      form.reset();
     });
   };
 
